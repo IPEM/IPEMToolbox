@@ -1,0 +1,311 @@
+================================================================================
+Log of changes to the IPEM Matlab toolbox (internal version)
+================================================================================
+Most recent changes are at the top of this file.
+Dates are specified in the following format:
+YYYYMMDD, where YYYY = 4 digits year  ;)
+                MM   = 2 digits month
+                DD   = 2 digits day
+
+--------------------------------------------------------------------------------
+IPEMSetup
+IPEMCheckVersion
+Joren Six - 20140106
+--------------------------------------------------------------------------------
+Platform and versions check modified to allow new versions/platforms.
+
+--------------------------------------------------------------------------------
+IPEMSetup
+IPEMCheckVersion
+Koen Tanghe - 20011204
+--------------------------------------------------------------------------------
+Platform and versions of needed components are checked.
+
+--------------------------------------------------------------------------------
+IPEMRoughnessFFT
+Koen Tanghe - 20010816
+--------------------------------------------------------------------------------
+Low and high frequency used to define the frequency range for calculation of
+'energy' related to roughness.
+These are now fixed for the model.
+
+--------------------------------------------------------------------------------
+IPEMCalcFFT
+Koen Tanghe - 20010627
+--------------------------------------------------------------------------------
+Handling of input arguments done using IPEMHandleInputArguments.
+
+--------------------------------------------------------------------------------
+20010228 - Version 1.00 released
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Roughness
+Koen Tanghe - 20010130
+--------------------------------------------------------------------------------
+Roughness instead of sensory dissonance.
+
+--------------------------------------------------------------------------------
+IPEMToolbox instead of IPEM
+Koen Tanghe - 20010117
+--------------------------------------------------------------------------------
+The main directory for the IPEM Toolbox is no longer called just IPEM, but rather
+IPEMToolbox. This name is more specific in case newer IPEM Matlab code trees will
+be developed.
+
+--------------------------------------------------------------------------------
+IPEMCalcSpectrogram
+Koen Tanghe - 20001130
+--------------------------------------------------------------------------------
+Bug fix: window function was not part of general Matlab code, but of 3rd party TFTB.
+Fixed.
+
+--------------------------------------------------------------------------------
+Demos\MECPatternExtraction
+Koen Tanghe - 20001003
+--------------------------------------------------------------------------------
+Added relevant things (setup stuff, common functions, demo functions).
+
+--------------------------------------------------------------------------------
+Koen Tanghe - 20001003
+--------------------------------------------------------------------------------
+New demo and functions for MEC.
+
+--------------------------------------------------------------------------------
+IPEMFadeLinear
+Koen Tanghe - 20000913
+--------------------------------------------------------------------------------
+Separate fade in and fade out time support.
+
+--------------------------------------------------------------------------------
+IPEMLeakyIntegration
+Koen Tanghe - 20000912
+--------------------------------------------------------------------------------
+Bug fix in plot (multiple channels).
+
+--------------------------------------------------------------------------------
+Demos\RoughnessApplications
+Koen Tanghe - 20000705
+--------------------------------------------------------------------------------
+New name instead of SDForPitchShiftedSounds
+Contains also demo for combinations of sounds
+
+--------------------------------------------------------------------------------
+IPEMGenerateANIForRoughnessTest
+Koen Tanghe - 20000608
+--------------------------------------------------------------------------------
+Added support for specifying a constant range for inPar3 for cases 1, 2 and 3
++ small bug fix in case 3 (end dB level was never reached: only went to 1
+interval step before end level)
+
+--------------------------------------------------------------------------------
+IPEMStripFileSpecification and IPEMEnsureDirectory
+Koen Tanghe - 20000607
+--------------------------------------------------------------------------------
+Support for network paths
+(such as '\\Studio\d\Koen\Temp')
+
+--------------------------------------------------------------------------------
+IPEMCalcANI - Cleans up temporary files.
+Koen Tanghe - 20000607
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+IPEMRoughnessFFT
+Koen Tanghe - 20000522
+--------------------------------------------------------------------------------
+Bug fixes:
+1. in loop (if width and frame were equal -> error)
+2. matrix Roughness yielded errors
+
+--------------------------------------------------------------------------------
+Demos\RoughnessApplications
+Koen Tanghe - 20000503
+--------------------------------------------------------------------------------
+New demo.
+
+--------------------------------------------------------------------------------
+IPEMSnipSoundFile
+IPEMExtractSegments
+Koen Tanghe - 20000419
+--------------------------------------------------------------------------------
+New functions
+
+--------------------------------------------------------------------------------
+IPEMFindAllPeaks
+Koen Tanghe - 20000413
+--------------------------------------------------------------------------------
+Improved + added preference for flat peaks
+
+--------------------------------------------------------------------------------
+IPEMGenerateFrameBasedSegments
+IPEMFindNoteFromFrequency
+Koen Tanghe - 20000410
+--------------------------------------------------------------------------------
+New functions
+
+--------------------------------------------------------------------------------
+IPEMCalcANI
+IPEMCalcANIFromFile
+Koen Tanghe - 20000403
+--------------------------------------------------------------------------------
+Three new parameters: inNumOfChannels,inFirstCBU and inCBUStep
+
+--------------------------------------------------------------------------------
+IPEMSetFigureLayout
+Koen Tanghe - 20000329
+--------------------------------------------------------------------------------
+New function
+
+--------------------------------------------------------------------------------
+IPEMCalcPitchSalienceFFT
+IPEMCalcPitchSalienceFFTFromANI
+--------------------------------------------------------------------------------
+Discrepancy comments <---> implementation (input arguments checking)
+
+--------------------------------------------------------------------------------
+IPEMRoughnessFFT - plot of FFTMatrix1 starts from second bin (not DC bin)
+IPEMGenerateANIForRoughnessTest - error messages corrected
+Koen Tanghe - 20000329
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+IPEMSetup
+IPEMSetupPreferences
+Koen Tanghe - 19991213
+--------------------------------------------------------------------------------
+Default paths are now preferences and must be set by setpref.
+Installing a new version does not destroy old settings any longer.
+
+--------------------------------------------------------------------------------
+IPEMSetup
+Koen Tanghe - 19991203
+--------------------------------------------------------------------------------
+No more warnings about paths upon first installation and run of toolbox.
+
+--------------------------------------------------------------------------------
+IPEMSaveANI
+IPEMSaveVar
+Koen Tanghe - 19991202
+--------------------------------------------------------------------------------
+IPEMSaveANI uses IPEMSaveVar instead of the 'savevar' from fident-toolbox.
+
+--------------------------------------------------------------------------------
+IPEMRoughness.m
+Koen Tanghe - 19991130
+--------------------------------------------------------------------------------
+No more 'IPEMRoughnessVF' nor 'IPEMRoughnessVFFrederic', but
+'IPEMRoughness'.
+
+--------------------------------------------------------------------------------
+IPEMCalcANI.m
+Koen Tanghe - 19991126
+--------------------------------------------------------------------------------
+No more 'load' (since it isn't supported by the compiler), but 'textread' and
+'reshape' instead...
+
+--------------------------------------------------------------------------------
+IPEMLoadANI.m
+IPEMSaveANI.m
+Koen Tanghe - 19991123
+--------------------------------------------------------------------------------
+From now on, ANIs are handled as .mat files !
+Use these two functions in combination with IPEMCalcANI and IPEMCalcANIFromFile.
+
+--------------------------------------------------------------------------------
+AuditoryModelConsole.exe
+IPEMCalcANI.m
+Koen Tanghe - 19991118
+--------------------------------------------------------------------------------
+Auditory model is now a mex-file (dll), so no more IPEMAuditoryModelConsole.exe.
+
+--------------------------------------------------------------------------------
+IPEMPeriodicityPitch.m
+Koen Tanghe - 19991116
+--------------------------------------------------------------------------------
+Use of IPEMHandleInputArguments.
+Sample frequencies are precise: no more rounding to integers.
+Step and width in samples are calculated with 'round' to get best approximation.
+One sample was sometimes missing at the end: loop to L - W + 1 (+1 was missing)
+
+--------------------------------------------------------------------------------
+IPEMShepardTone.m
+Koen Tanghe - 19991109
+--------------------------------------------------------------------------------
+Removed figure things
+
+--------------------------------------------------------------------------------
+IPEMRootDir.m
+Koen Tanghe - 19991109
+--------------------------------------------------------------------------------
+Fixed problem with unknown root dirs.
+
+--------------------------------------------------------------------------------
+IPEMHandleInputArguments.m
+Koen Tanghe - 19991109
+--------------------------------------------------------------------------------
+No longer 'assignin', but 'varargout'.
+
+--------------------------------------------------------------------------------
+IPEMPeriodicityPitch.m
+Koen Tanghe - 19991108
+--------------------------------------------------------------------------------
+Removed normalization from autocorrelation analysis
+
+--------------------------------------------------------------------------------
+AuditoryModelConsole.exe
+IPEMANICorrection.m (removed)
+IPEMCalcANI, IPEMLoadANI
+Koen Tanghe - 19991104
+--------------------------------------------------------------------------------
+Strange delay shifts in ANI are definitively solved (ie. IPEMANICorrection.m is
+no longer needed and thus removed)
+Also, the frequencies stored in 'Filterfrequencies.txt' start at the first character
+of each line, avoiding the problem of having 2 empty columns after reading with
+older versions of 'dlmread'.
+
+--------------------------------------------------------------------------------
+IPEMHandleInputArguments.m
+Koen Tanghe - 19991103
+--------------------------------------------------------------------------------
+Simple but general input handling routine.
+Avoids you to recode variable input arguments handling over and over again for
+each function you write...
+
+--------------------------------------------------------------------------------
+AuditoryModelConsole.exe
+IPEMCalcANI, IPEMLoadANI, related files
+Koen Tanghe - 19991007
+--------------------------------------------------------------------------------
+Auditory model was changed. Output is now at sample frequency 11025.
+IPEMCalcANI and IPEMLoadANI both downsample this to 22050/8 (just like before).
+You can specify not to downsample if you wish.
+
+--------------------------------------------------------------------------------
+IPEMRootDir - cell array versus normal array stuff
+IPEMCalcANI - load('','')
+IPEMLoadANI - replaces IPEMLoadLastANI, adding more flexibility
+IPEMCalcFFT - replaces IPEMShowFFT, now also returns results (Ampl, Phase, Freqs)
+Koen Tanghe - 19991007
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+CleanUpGarbageInThisDirectory.bat
+Koen Tanghe - 19990916
+--------------------------------------------------------------------------------
+Double-click this file to clean up all .ani, .dat, .txt and .wav files in the
+executables directory.
+
+--------------------------------------------------------------------------------
+IPEMAdaptLevel (and functions that are using this function)
+Koen Tanghe - 19990915
+--------------------------------------------------------------------------------
+Definition of the dB level of a signal:
+
+  dBLevel = 20*log10(mean(Signal.^2))
+
+So, the reference value of 0 dB level corresponds to the average RMS level of a
+square wave with amplitude 1.
+This is compatible with popular sound editors (such as SoundForge).
+A sine wave with amplitude 1 thus has a dB level of -3.01 dB.
+

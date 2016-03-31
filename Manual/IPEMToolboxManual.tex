@@ -1,0 +1,157 @@
+% ================================================================================
+% IPEMToolboxManual.tex
+% Main TeX file for the Manual of the IPEM Toolbox
+% ================================================================================
+
+% --------------------------------------------------------------------------------
+% Use the following line(s) to include only (a) specific part(s) of the document
+% (place a % sign in front of it to include everything)
+%
+%\includeonly{ReferenceManualIntroduction}
+%\includeonly{ReferenceManualFunctionReference}
+%\includeonly{AppRoughnessExperiments}
+%\includeonly{AppTonalityInductionExperiments}
+%\includeonly{AppRhythmicPatternExtraction}
+%\includeonly{RhythmModule}
+
+% --------------------------------------------------------------------------------
+
+% --------------------------------------------------------------------------------
+% Start of preamble - don't change these settings please...
+%                     (except for setting the defined IPEMFlag... variables)
+% --------------------------------------------------------------------------------
+
+% Setup document style and formatting
+\documentclass[a4paper,oneside,12pt]{book}
+\setlength{\parindent}{0pt} \addtolength{\hoffset}{-50pt}
+\addtolength{\textwidth}{105pt} \addtolength{\voffset}{-40pt}
+\addtolength{\textheight}{60pt}
+
+% Include support for conditionals
+\usepackage{ifthen}
+
+% Define some flags
+\newboolean{IPEMFlagPDFOutput} % true for PDF output, false otherwise (dvips)
+\newboolean{IPEMFlagGraphics} % true when you want to include graphics, false otherwise
+
+% Set document flags
+\setboolean{IPEMFlagPDFOutput}{true} % true or false
+\setboolean{IPEMFlagGraphics}{true} % true or false
+
+% Include support for graphics
+\ifthenelse{\boolean{IPEMFlagPDFOutput}}
+{ \ifthenelse{\boolean{IPEMFlagGraphics}}
+    {\usepackage[pdftex]{graphicx}}
+    {\usepackage[pdftex,draft]{graphicx}}
+} {\ifthenelse{\boolean{IPEMFlagGraphics}}
+    {\usepackage[dvips]{graphicx}}
+    {\usepackage[dvips,draft]{graphicx}}
+}
+
+% Include support for hyper references
+% (should be last in the list of included packages according to its documentation,
+% but in practice it only works together with the apacite package when it's placed
+% in front of that package)
+\usepackage[backref=true,urlcolor=blue,linkcolor=red,colorlinks=true]{hyperref}
+
+% Include support for citations
+\usepackage{apacite}
+
+% Self-defined commands and environments
+\newcommand{\IPEMMailSupport}{\href{mailto:toolbox[at]ipem[dot]ugent[dot]be}{toolbox[at]ipem[dot]ugent[dot]be}}
+\newcommand{\IPEMWebSite}[1]{\href{http://www.ipem.ugent.be#1}{www.ipem.ugent.be#1}}
+\newcommand{\IPEMTBC}{\begin{large} \textit{... To Be Completed ...} \end{large}}
+\newcommand{\IPEMVersion}{Version: 1.02 (beta)}
+\newcommand{\IPEMDate}{Date: 20140106}
+\newcommand{\IPEMDefaultFigureWidth}{12cm}
+\newcommand{\IPEMCodeExtract}[1]{\texttt{\normalsize{#1}}}
+\newenvironment{IPEMCodeEnvironment}{ \begin{ttfamily} \begin{small} }{ \end{small} \end{ttfamily} }
+\newcommand{\IPEMShortTitle}{IPEM Toolbox}
+\newcommand{\IPEMFullTitle}{Toolbox for perception-based music analysis}
+\newcommand{\IPEMAuthors}{Marc Leman, Micheline Lesaffre, Koen Tanghe}
+
+% Better layout
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\color[gray]{0.4}\slshape\leftmark}
+\fancyhead[R]{\color[gray]{0.4}\slshape\rightmark}
+\fancyfoot[L]{\color[gray]{0.4}\slshape{IPEM Toolbox Manual}}
+\fancyfoot[C]{\color[gray]{0.4}}
+\fancyfoot[R]{\color[gray]{0.4}\slshape\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{Chapter \thechapter \ - #1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\addtolength{\headheight}{\baselineskip} %2.5pt}
+
+% Include support for tables
+\usepackage{tabularx}
+
+% \IPEMSound{inSoundFile}{inText}
+% Command for inserting a link to an external sound file:
+% - inSoundFile = path\name of sound file (with path relative to document location)
+% - inText = text for the link
+\newlength{\IPEMCharHeight}
+\ifthenelse{\boolean{IPEMFlagPDFOutput}}
+    {   \newcommand{\IPEMSound}[2]{\settoheight{\IPEMCharHeight}{L}\pdfstartlink user{
+                /Subtype /Movie
+                /Movie<</Type/Sound/F(#1)>>
+                /Border [0 0 0]
+            }#2 \includegraphics[height=\IPEMCharHeight]{Graphics/Ear}\pdfendlink
+        }
+    }
+    {   \newcommand{\IPEMSound}[2] % otherwise, a hyperlink is used
+        {\href{#1}{#2}}
+    }
+
+% Include PDF file information
+\ifthenelse{\boolean{IPEMFlagPDFOutput}}
+    {   \pdfinfo
+        {   /Title      (\IPEMShortTitle: \IPEMFullTitle)
+            /Author     (\IPEMAuthors)
+            /Subject    (Manual for \IPEMShortTitle)
+            /Keywords   (auditory processing,music analysis,perception,MATLAB)
+        }
+    }
+    {}
+
+
+% --------------------------------------------------------------------------------
+% End of preamble
+% --------------------------------------------------------------------------------
+
+
+\begin{document}
+
+\bibliographystyle{apacite}
+
+\include{TitlePage}
+
+\newpage
+\input{CopyrightNoticeFDL}
+
+\tableofcontents
+
+\newpage
+\part{Introduction}
+\hypertarget{Part:Introduction}{}
+\input{Introduction}
+
+\newpage
+\part{Concepts}
+\hypertarget{Part:Concepts}{}
+\input{Concepts}
+
+\newpage
+\input{Acronyms}
+
+\newpage
+\bibliography{LEMAN,ALLSRT2000}
+
+\newpage
+\part{Reference manual}
+\hypertarget{Part:ReferenceManual}{}
+\input{ReferenceManual}
+
+\end{document}

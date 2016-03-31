@@ -1,0 +1,4539 @@
+\newpage
+\sectionmark{General functions}
+~\vfill
+\begin{center}
+   \section*{General functions}
+   \subsection*{}
+\end{center}
+\vfill
+\addcontentsline{toc}{section}{General functions}
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMAMTone}{IPEMAMTone}\sectionmark{IPEMAMTone}}
+\addcontentsline{toc}{subsection}{IPEMAMTone}
+\hypertarget{FuncRef:IPEMAMTone}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal] = IPEMAMTone(inCarrierFreq,inModulationFreq,inModulationDepth,...
+                           inDuration,indBLevel,inSampleFreq,inFadeInOut)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates an amplitude modulated tone according to:
+    s(t) = (1 + inModulationDepth*sin(2*pi*inModulationFreq*t))
+           *sin(2*pi*inCarrierFreq*t)
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inCarrierFreq = carrier frequency (in Hz)
+  inModulationFreq = modulation frequency (in Hz)
+  inModulationDepth = modulation depth
+  inDuration = wanted duration (in s)
+  indBLevel = wanted dB level (in dB)
+              if empty or not specified, -20 dB is used by default
+  inSampleFreq = wanted sample frequency (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inFadeInOut = duration of linear fade in and out of the sound signal (in s)
+                given as [FadeIn FadeOut] or as a scalar (FadeIn == FadeOut)
+                if empty or not specified, 0.010 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = generated sound signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  s = IPEMAMTone(1000,70,0.65,0.200,-20,44100,0.010);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040323
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMAdaptLevel}{IPEMAdaptLevel}\sectionmark{IPEMAdaptLevel}}
+\addcontentsline{toc}{subsection}{IPEMAdaptLevel}
+\hypertarget{FuncRef:IPEMAdaptLevel}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMAdaptLevel (inSignal,indB)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function adapts the RMS power level of the (multi-channel) signal
+  to the specified dB level. Channels are represented by rows.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the input signal (each row represents a channel)
+  indB = wanted level (0 is maximum level without clipping, -20 is reasonable)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the adapted signal
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The reference value of 0 dB is the level of a square wave with amplitude 1
+  Thus, a sine wave with amplitude 1 yields -3.01 dB.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMAdaptLevel(Signal,-6);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman
+  Koen Tanghe - 20000626
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMAnimateSlices}{IPEMAnimateSlices}\sectionmark{IPEMAnimateSlices}}
+\addcontentsline{toc}{subsection}{IPEMAnimateSlices}
+\hypertarget{FuncRef:IPEMAnimateSlices}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMAnimateSlices(inSignal,inSampleFreq,XAxisLabel,YAxisLabel,...
+                    inXData,inXRange,inYRange,inTimeRange,...
+                    inTimeStep,inAnimationInterval,inScales,inGraphicsHandle)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Displays animated plots of a 2D matrix where each column represents a slice
+  of data at a certain moment in time.
+  Could be used as an alternative to a surf plot...
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = 2D vector in which each column contains a slice of data
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inXAxisLabel = label to display on the X axis of the plot
+                 if empty or not specified '' is used by default
+  inYAxisLabel = label to display on the Y axis of the plot
+                 if empty or not specified '' is used by default
+  inXData = vector containing the values that correspond with each row of the
+            2D vector
+            if empty or not specified, 1:size(inSignal,1) is used by default
+  inXRange = X range for which values need to be displayed in each plot
+             specified as a vector [LowXValue HighXValue]
+             if empty or not specified, [min(inXData) max(XData)] is used
+             by default
+  inYRange = Y range for which values will be visible in the plot, specified
+             as a vector [MinYValue MaxYValue]
+             if empty or not specified, [min(min(inSignal)) max(max(inSignal))]
+             is used by default
+  inTimeRange = time range that should be animated, specified as a vector
+                [StartTime EndTime] (in s)
+                if empty or not specified, the entire signal is animated
+                by default (so: [0 (size(inSignal,2)-1)/inSampleFreq])
+  inTimeStep = time step to use for stepping through the animated data (in s)
+               if empty or not specified, 1/inSampleFreq is used by default
+  inAnimationInterval = time to wait between two successive plots in
+                        the animation (in s)
+                        if -1, real-time is used
+                        if empty or not specified, 0 is used by default
+  inScales = 2 element cell vector specifying the type of scale to use for the
+             X and Y axis specified as {XType YType}, where XType and YType can
+             be either 'linear' or 'log'
+             if empty or not specified, {'linear' 'linear'} is used by default
+  inGraphicsHandle = handle of a subplot or a figure in which the animation
+                     should be shown
+                     if empty or not specified, a new subplot in a new figure
+                     will be used by default
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Keys that can be pressed in the figure while the plot is animated:
+  '+' = forward
+  '-' = backward
+  ' ' = pause
+  'x' = exit
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,fs] = IPEMReadSoundFile('schum1.wav');
+  [S,T,F] = IPEMCalcSpectrogram(s,fs,0.040,0.010);
+  IPEMAnimateSlices(abs(S),1/T(2),'Frequency (in Hz)','Amplitude',F);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20021021
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMBatchExtractSoundFragment}{IPEMBatchExtractSoundFragment}\sectionmark{IPEMBatchExtractSoundFragment}}
+\addcontentsline{toc}{subsection}{IPEMBatchExtractSoundFragment}
+\hypertarget{FuncRef:IPEMBatchExtractSoundFragment}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMBatchExtractSoundFragment(inFragment,inInputDirectory,inFilePattern,...
+                                inOutputDirectory,inNewNameFormat,...
+                                inCreateDir,inFadeInOutTime,...
+                                inPreferNegativeTimes)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Extracts a fragment from all sound files in a specific directory matching 
+  the specified wildcard pattern, and saves each fragment to the specified 
+  output directory appending a suffix.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFragment = Fragment that should be extracted.
+               Specified as [StartTime EndTime] where both elements are in s.
+               If StartTime < 0, it is referenced from the end of file.
+               If EndTime <= 0, it is referenced from the end of the file.
+  inInputDirectory = Directory where the sound files are located.
+  inFilePattern = Wildcard pattern for the files that should be processed.
+                  If empty or not specified, '*.wav' is used by default.
+  inOutputDirectory = Directory where the extracted sound fragments should be 
+                      written. If empty or not specified, inInputDirectory is 
+                      used by default.
+  inNewNameFormat = Format string that should be used for the file names of
+                    the new sound fragments. This must be a format string 
+                    where the first type specifier is a %s (will be replaced 
+                    by the original base file name), and the second and third 
+                    are a %f (will be replaced by the start resp. end time
+                    in seconds). 
+                    If empty or not specified, '%s_%gs_%gs" is used by default.
+  inCreateDir = If 1, the output directory is created if it doesn't exist yet.
+                If empty or not specified, 1 is used by default.
+  inFadeInOutTime = Time over which the beginning and end should be faded in
+                    repectively out (in s).
+                    If empty or not specified, 0.010 s is used by default.
+  inPreferNegativeTimes = If 0, negative start or end times will be shown as 
+                          the actually used times in the output file names.
+                          Otherwise, negative times will be kept.
+                          If empty or not specified, 1 is used by default.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMBatchExtractSoundFragment([60 90],'D:\Temp\','*.wav','D:\Temp2\');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040702
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMBellShape}{IPEMBellShape}\sectionmark{IPEMBellShape}}
+\addcontentsline{toc}{subsection}{IPEMBellShape}
+\hypertarget{FuncRef:IPEMBellShape}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outY = IPEMBellShape (inX,inCenter,inWidth,inPeak)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function generates a bell shaped curve.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inX = input data points
+  inCenter = center of the curve
+  inWidth = width of the curve:
+            the value at (inCenter + inWidth) is 10% of inPeak 
+  inPeak = maximum value (at the center of the curve)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outY = curve values for the input
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Y = IPEMBellShape(0:1000,500,100,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000208
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMBlockDC}{IPEMBlockDC}\sectionmark{IPEMBlockDC}}
+\addcontentsline{toc}{subsection}{IPEMBlockDC}
+\hypertarget{FuncRef:IPEMBlockDC}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal,outSignalFreq] = ...
+    IPEMBlockDC(inSignal,inSignalFreq,inCutoffFreq,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Blocks DC (very low frequencies).
+Based on the formula:
+	y(n) = g * ( x(n) - x(n-1) ) + R * y(n-1)
+where
+	R = 1 - (2*PI*Fc/Fs)
+      g = (1 + R)/2 (for gain correction)
+	Fc = cutoff frequency in Hz (-3 dB point)
+	Fs = sample frequency in Hz
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = one dimensional input signal
+  inSignalFreq = sample frequency of inSignal (in Hz)
+  inCutoffFreq = -3 dB cutoff frequency for HP filter (in Hz)
+  inPlotFlag = if non-zero, plots are generated
+               if not specified or empty, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = Processed signal.
+  outSignalFreq = Sample frequency of output signal (same as input) (in Hz).
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s2,fs2] = IPEMBlockDC(s,fs,50,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20050120
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcANI}{IPEMCalcANI}\sectionmark{IPEMCalcANI}}
+\addcontentsline{toc}{subsection}{IPEMCalcANI}
+\hypertarget{FuncRef:IPEMCalcANI}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outANI,outANIFreq,outANIFilterFreqs] = ...
+    IPEMCalcANI (inSignal,inSampleFreq,inAuditoryModelPath,...
+                 inPlotFlag,inDownsamplingFactor,...
+                 inNumOfChannels,inFirstCBU,inCBUStep)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the auditory nerve image for the given signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the sound signal to be processed
+  inSampleFreq = the sample frequency of the input signal (in Hz)
+  inAuditoryModelPath = path to the working directory for the auditory model
+                        if empty or not specified, IPEMRootDir('code')\Temp
+                        is used by default
+  inPlotFlag = if non-zero, plots the ANI
+               if empty or not specified, 0 is used by default
+  inDownsamplingFactor = the integer factor by which the outcome of the
+                         auditory model is downsampled
+                         (use 1 for no downsampling)
+                         if empty or not specified, 4 is used by default
+  inNumOfChannels = number of channels to use
+                    if empty or not specified, 40 is used by default
+  inFirstCBU = frequency of first channel (in critical band units)
+               if empty or not specified, 2.0 is used by default
+  inCBUStep = frequency difference between channels (in cbu)
+              if empty or not specified, 0.5 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outANI = a matrix of size [N M] representing the auditory nerve image,
+           where N is the number of channels (currently 40) and
+                 M is the number of samples
+  outANIFreq = sample freq of ANI (in Hz)
+  outANIFilterFreqs = center frequencies used by the auditory model (in Hz)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The outcome of the auditory model normally has a sample frequency of
+  11025 Hz, but for most calculations this can be downsampled to a lower
+  value (11025/4 is the default).
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [ANI,ANIFreq,ANIFilterFreqs] = IPEMCalcANI(Signal,SampleFreq,[],1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010129
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcANIFromFile}{IPEMCalcANIFromFile}\sectionmark{IPEMCalcANIFromFile}}
+\addcontentsline{toc}{subsection}{IPEMCalcANIFromFile}
+\hypertarget{FuncRef:IPEMCalcANIFromFile}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outANI,outANIFreq,outANIFilterFreqs] = ...
+    IPEMCalcANIFromFile (inFileName,inFilePath,inAuditoryModelPath,...
+                         inPlotFlag,inDownsamplingFactor,...
+                         inNumOfChannels,inFirstCBU,inCBUStep)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the auditory nerve image for the given sound file.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = the sound file to be processed
+  inFilePath = the path to the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds
+               is used by default
+  inAuditoryModelPath = path to the working directory for the auditory model
+                        if empty or not specified, IPEMRootDir('code')\Temp
+                        is used by default)
+  inPlotFlag = if non-zero or empty, plots the ANI
+               if empty or not specified, 0 is used by default
+  inDownsamplingFactor = the integer factor by which the outcome of the
+                         auditory model is downsampled
+                         (use 1 for no downsampling)
+                         if empty or not specified, 4 is used by default
+  inNumOfChannels = number of channels to use
+                    if empty or not specified, 40 is used by default
+  inFirstCBU = frequency of first channel (in critical band units)
+               if empty or not specified, 2.0 is used by default
+  inCBUStep = frequency difference between channels (in cbu)
+              if empty or not specified, 0.5 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outANI = a matrix of size [N M] representing the auditory nerve images,
+           where N is the number of channels (currently 40) and
+                 M is the number of samples
+  outANIFreq = sample freq of ANI
+  outANIFilterFreqs = center frequencies used by the auditory model
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The outcome of the auditory model normally has a sample frequency of
+  11025 Hz, but for most calculations this can be downsampled to a lower
+  value (11025/4 is the default).
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [ANI,ANIFreq,ANIFilterFreqs] = IPEMCalcANIFromFile ('music.wav',[],[],1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010129
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcCentroid}{IPEMCalcCentroid}\sectionmark{IPEMCalcCentroid}}
+\addcontentsline{toc}{subsection}{IPEMCalcCentroid}
+\hypertarget{FuncRef:IPEMCalcCentroid}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outCentroid = IPEMCalcCentroid (inWeights,inWeightFreq,...
+                                  inFrameWidth,inFrameInterval,inDistances,...
+                                  inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the centroid for the given (time-varying) weights and their
+  (constant) distances.
+  This can be used to calculate the (time-varying) centroid of the spectrum
+  of a musical signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inWeights = a matrix (of size [N M]) in which each column represents weight
+              data at a given moment in time
+  inWeightFreq = frequency at which the weight data is sampled (in Hz)
+  inFrameWidth = width of 1 frame (in s)
+  inFrameInterval = interval between successive frames (in s)
+  inDistances = a vector of size [N 1], representing distances for each weight
+                if empty or not specified, (1:N)' is used
+  inPlotFlag = if non-zero, plots the centroid
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outCentroid = the (time-varying) centroid of the weights
+  outCentroidFreq = sample frequency for centroid
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Centroid,CentroidFreq] = IPEMCalcCentroid(ANI,ANIFreq,0.05,0.01,...
+                                             ANIFilterFreqs);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010221
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcCentroidWidth}{IPEMCalcCentroidWidth}\sectionmark{IPEMCalcCentroidWidth}}
+\addcontentsline{toc}{subsection}{IPEMCalcCentroidWidth}
+\hypertarget{FuncRef:IPEMCalcCentroidWidth}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outWidth,outWidthFreq] =
+    IPEMCalcCentroidWidth(inWeights,inWeightFreq,
+                          inFrameWidth,inFrameInterval,
+                          inDistances,inCentroid,
+                          inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the weighted difference between the spectral components and the
+  (already) calculated centroid of the given multi-channel signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inWeights = a matrix (of size [N M]) in which each column represents weight
+              data at a given moment in time
+  inWeightFreq = frequency at which the weight data is sampled (in Hz)
+  inFrameWidth = width of 1 frame (in s)
+  inFrameInterval = interval between successive frames (in s)
+  inDistances = a vector of size [N 1], representing distances for each weight
+                if empty or not specified, (1:N)' is used
+  inCentroid = this provides the centroid for the data that was
+               calculated with IPEMCalcCentroid, using the same parameters
+               if empty or not specified, the centroid itself is calculated
+               in this function
+  inPlotFlag = if non-zero, plots three curves:
+               the centroid itself (central line), plus both the centroid + the
+               centroid width and the centroid - the centroid width
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outWidth = the calculated width
+  outWidthFreq = sample frequency of the width
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Width,WidthFreq] = IPEMCalcCentroidWidth(ANI,ANIFreq,0.05,0.01,...
+                                            ANIFilterFreqs);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010221
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcFFT}{IPEMCalcFFT}\sectionmark{IPEMCalcFFT}}
+\addcontentsline{toc}{subsection}{IPEMCalcFFT}
+\hypertarget{FuncRef:IPEMCalcFFT}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outAmpl,outPhase,outFreqs] = IPEMCalcFFT (inSignal, inSampleFreq, ...
+                                             inFFTSize, inPlotFlag, ...
+                                             inUseLogScale, inShowPhase)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates (and shows) the amplitude and phase of a real
+  signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal to be analyzed
+  inSampleFreq = the frequency at which the signal was sampled (in Hz)
+  inFFTSize = size of the FFT 
+              if empty or not specified, the power of two nearest to the full
+              length of the signal is used by default
+  inPlotFlag = if non-zero, shows FFT plot
+               if empty or not specified, 1 is used by default
+  inUseLogScale = if non-zero, a logarithmic scale is used for the frequency
+                  if empty or not specified, 1 is used by default
+  inShowPhase = if non-zero, the phase is shown as well
+                if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outAmpl = amplitude of fft components
+  outPhase = phase of fft components
+  outFreqs = frequencies used for fft calculation
+  
+  The indices in these output matrices (of length L) correspond to the
+  following frequencies:
+    index 1  corresponds to  the DC component
+    index i  corresponds to  frequency (i-1)*inSampleFreq/inFFTSize
+    index L  corresponds to  the Nyquist frequency (if inFFTSize was even)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  If inFFTSize is smaller than the length of inSignal, inSignal is truncated
+  (a warning is issued when this happens).
+  If inFFTSize is bigger than the length of inSignal, inSignal is padded with
+  zeroes.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Ampl,Phase,Freqs] = IPEMCalcFFT (Signal,SampleFreq,1024,1,1,0);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010627
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcFlux}{IPEMCalcFlux}\sectionmark{IPEMCalcFlux}}
+\addcontentsline{toc}{subsection}{IPEMCalcFlux}
+\hypertarget{FuncRef:IPEMCalcFlux}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outFlux = IPEMCalcFlux (inSignal,inSampleFreq,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the flux of the signal, where the flux is defined as
+  the norm of the difference (vector) between the current and the previous
+  values of the (multichannel) signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = input signal (spectral data, for example)
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inPlotFlag = if non-zero, plots are generated
+               if not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outFlux = calculated flux
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Flux = IPEMCalcFlux (Signal,SampleFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010906
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcMeanAndVariance}{IPEMCalcMeanAndVariance}\sectionmark{IPEMCalcMeanAndVariance}}
+\addcontentsline{toc}{subsection}{IPEMCalcMeanAndVariance}
+\hypertarget{FuncRef:IPEMCalcMeanAndVariance}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outMean,outVariance,outFreq] = 
+    IPEMCalcMeanAndVariance(inSignal,inSampleFreq,
+                            inFrameWidth,inFrameInterval,
+                            inPlotFlag,inPlotTitle)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates 'running' mean and variance of multi-channel signal:
+  for each channel, the mean and variance is calculated within succesive
+  frames.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to be analyzed
+  inSampleFreq = sample frequency of the input signal (in Hz)
+  inFrameWidth = width of 1 frame (in s)
+  inFrameInterval = interval between successive frames (in s)
+  inPlotFlag = if non-zero, plots are generated
+               if not specified or empty, 1 is used by default
+  inPlotTitle = title for the plot
+                if not specified or empty, no title is shown
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outMean = 'running' mean of inSignal
+  outVariance = 'running' variance of inSignal
+  outFreq = sample frequency for both outMean and outVariance
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Mean,Variance,Freq] = IPEMCalcMeanAndVariance(RMS,RMSFreq,0.05,0.01,1,...
+                                                 'RMS');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20001012
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcNoteFrequency}{IPEMCalcNoteFrequency}\sectionmark{IPEMCalcNoteFrequency}}
+\addcontentsline{toc}{subsection}{IPEMCalcNoteFrequency}
+\hypertarget{FuncRef:IPEMCalcNoteFrequency}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outFrequency = 
+    IPEMCalcNoteFrequency(inNoteNr,inOctaveNr,
+                          inRefNoteNr,inRefOctaveNr,
+                          inRefFreq,inNotesPerOctave,
+                          inOctaveRatio)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the frequency of a note.
+  Supports non-standard tone scales that can be calculated like this:
+
+      Frequency = RefFreq * OctaveRatio^Exponent
+
+      where:
+
+      Exponent = (OctaveNr-RefOctaveNr) + (NoteNr-RefNoteNr)/NotesPerOctave 
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inNoteNr = the rank number of the note (for example: 1 for C, 2 for C#, ...)
+             For the standard octave division (12 notes, ref. A4), this can
+             also be a note string like 'A#' (in which case inOctaveNr must
+             still be specified), or 'A#4' (in which case inOctaveNr can be
+             omitted or left empty). Both sharps (#) and flats (b) can be used.
+  inOctaveNr = the octave number of the note
+               if empty or not specified, inNoteNr is assumed to contain the
+               octave specification 
+  inRefNoteNr = the rank number of the reference note
+                if empty or not specified, 10 is used by default
+  inRefOctaveNr = the octave number of the reference note
+                  if empty or not specified, 4 is used by default
+  inRefFreq = the frequency of the reference note (in Hz)
+              if empty or not specified, 440 Hz is used
+  inNotesPerOctave = the number of notes in one octave
+                     if empty or not specified, 12 is used by default
+  inOctaveRatio = the frequency ratio between two octaves
+                  if empty or not specified, 2 is used
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outFrequency = the frequency for the note (in Hz)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Frequency = IPEMCalcNoteFrequency('A#5');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000509
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcOnsets}{IPEMCalcOnsets}\sectionmark{IPEMCalcOnsets}}
+\addcontentsline{toc}{subsection}{IPEMCalcOnsets}
+\hypertarget{FuncRef:IPEMCalcOnsets}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOnsetSignal,outOnsetFreq] = 
+    IPEMCalcOnsets(inSignal,inSampleFreq,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the onsets for the given signal using the auditory
+  model and an integrate-and-fire neural net layer.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to be processed
+  inSampleFreq = sample frequency of input signal (in Hz)
+  inPlotFlag = if non-zero, a plot is generated at the end
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOnsetSignal = signal having a non-zero value for an onset, and zero
+                   otherwise (the higher the non-zero value, the more our
+                   system is convinced that the onset is really an onset)
+  outOnsetFreq = sample frequency of outOnsetSignal (in Hz)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [OnsetSignal,OnsetFreq] = IPEMCalcOnsets(s,fs);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030327
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcOnsetsFromANI}{IPEMCalcOnsetsFromANI}\sectionmark{IPEMCalcOnsetsFromANI}}
+\addcontentsline{toc}{subsection}{IPEMCalcOnsetsFromANI}
+\hypertarget{FuncRef:IPEMCalcOnsetsFromANI}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOnsetSignal,outOnsetFreq] =
+    IPEMCalcOnsetsFromANI(inANI,inANIFreq,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the onsets for a given signal represented by its 
+  auditory nerve image, using an integrate-and-fire neural net layer.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inANI = auditory nerve image to be processed
+  inANIFreq = sample frequency of auditory nerve image (in Hz)
+  inPlotFlag = if non-zero, a plot is generated at the end
+               if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOnsetSignal = signal having a non-zero value for an onset, and zero
+                   otherwise (the higher the non-zero value, the more our
+                   system is convinced that the onset is really an onset)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [OnsetSignal,OnsetFreq] = IPEMCalcOnsetsFromANI(ANI,ANIFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010122
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcPeakLevel}{IPEMCalcPeakLevel}\sectionmark{IPEMCalcPeakLevel}}
+\addcontentsline{toc}{subsection}{IPEMCalcPeakLevel}
+\hypertarget{FuncRef:IPEMCalcPeakLevel}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outPeakSignal,outPeakFreq] = ...
+    IPEMCalcPeakLevel(inSignal,inSampleFreq,inFrameWidth,
+                      inFrameInterval,inUseAbs,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the running maximum of the given signal:
+  a maximum is generated every inFrameInterval seconds over a period of  
+  inFrameWidth seconds.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the input signal (if this is a matrix, peak values are calculated
+             for each channel (ie. row) in the signal)
+  inSampleFreq = the sample frequency of the input signal (in Hz)
+  inFrameWidth = the period over which the maximum is calculated (in s)
+  inFrameInterval = the period between two successive frames (in s)
+  inUseAbs = if non-zero, abs(inSignal) is used instead of the original input
+             if not specified or empty, 1 is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if not specified or empty, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outPeakSignal = the running maximum value of the signal
+  outPeakFreq = the sample frequency of the maximum signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,fs] = IPEMReadSoundFile;
+  [Max,MaxFreq] = IPEMCalcPeakLevel(s,fs,0.020,0.010,1,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040323
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcRMS}{IPEMCalcRMS}\sectionmark{IPEMCalcRMS}}
+\addcontentsline{toc}{subsection}{IPEMCalcRMS}
+\hypertarget{FuncRef:IPEMCalcRMS}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outRMSSignal,outRMSFreq] = IPEMCalcRMS (inSignal,inSampleFreq,inFrameWidth,
+                                           inFrameInterval,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the running RMS value of the given signal:
+  an RMS value is generated every inFrameInterval seconds over a period of  
+  inFrameWidth seconds.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the input signal (if this is a matrix, RMS values are calculated
+             for each channel (ie. row) in the signal)
+  inSampleFreq = the sample frequency of the input signal (in Hz)
+  inFrameWidth = the period over which the RMS is calculated (in s)
+  inFrameInterval = the period between two successive frames (in s)
+  inPlotFlag = if non-zero, plots are generated
+               if not specified or empty, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRMSSignal = the running RMS value of the signal
+  outRMSFreq = the sample frequency of the RMS signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [RMSSignal,RMSFreq] = IPEMCalcRMS(ANI,ANIFreq,0.050,0.010);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010221
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcRoughnessOfToneComplex}{IPEMCalcRoughnessOfToneComplex}\sectionmark{IPEMCalcRoughnessOfToneComplex}}
+\addcontentsline{toc}{subsection}{IPEMCalcRoughnessOfToneComplex}
+\hypertarget{FuncRef:IPEMCalcRoughnessOfToneComplex}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal,outSignalFreq,outRoughness,outRoughnessFreq] = ...
+    IPEMCalcRoughnessOfToneComplex(inBaseFreq,inOctaveRatio,
+                                   inNumOfHarmonics,inDuration,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the roughness for a superposition of two complex tones
+  having inNumOfHarmonics harmonics:
+  - a constant one with fundamental frequency inBaseFreq
+  - one with linearly increasing fundamental frequency
+    (from inBaseFreq to inBaseFreq*inOctaveRatio)
+  Any octave ratio can be specified.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inBaseFreq = fundamental frequency for the tone complex (in Hz)
+  inOctaveRatio = frequency ratio for the octave
+  inNumOfHarmonics = total number of harmonics for each tone complex
+  inDuration = duration of the signal (in s)
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = signal that was analyzed
+  outSignalFreq = sample frequency for outSignal (in Hz)
+  outRoughness = roughness calculated for the signal
+  outRoughnessFreq = sample frequency for outRoughness (in Hz)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,fs,r,rfreq] = IPEMCalcRoughnessOfToneComplex(440,2,5,5);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20050120
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcRoughnessOverSubparts}{IPEMCalcRoughnessOverSubparts}\sectionmark{IPEMCalcRoughnessOverSubparts}}
+\addcontentsline{toc}{subsection}{IPEMCalcRoughnessOverSubparts}
+\hypertarget{FuncRef:IPEMCalcRoughnessOverSubparts}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outRoughness,outDiffCents] = 
+    IPEMCalcRoughnessOverSubparts(inOriginalFileName,inOriginalFilePath,
+                                  inCentsToRaise,inCentsPerStep,
+                                  inMixedFileName,inMixedFilePath)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the roughness over the subparts of a sound file that was made by
+  CoolEdit2000 using a script file generated by IPEMGeneratePitchShiftScript.
+  An array is returned containing a value for the roughness for each
+  subpart of the sound file.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inOriginalFileName = name of the original sound file that was processed
+  inOriginalFilePath = path to the location of the original sound file
+                       if empty or not specified, IPEMRootDir('input')\Sounds'
+                       is used by default
+  inCentsToRaise = maximum number of cents the pitch was raised
+                   if empty or not specified, 1200 is used by default
+  inCentsPerStep = number of cents the pitch was raised per step
+                   if empty or not specified, 100 is used by default
+  inMixedFileName = name of the file containing the mix of the original 
+                    and the pitch shifted sounds
+                    if empty or not specified, the same name as the original
+                    file is used, but now ending on '_mixed.wav' instead of
+                    just '.wav'
+  inMixedFilePath = path to the mixed file
+                    if empty or not specified, the same location as the
+                    original sound file is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRoughness = the roughness values
+  outDiffCents = the corresponding difference in pitch (in cents)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Roughness,DiffCents] = IPEMCalcRoughnessOverSubparts('bottle.wav');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20011008
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcSpectrogram}{IPEMCalcSpectrogram}\sectionmark{IPEMCalcSpectrogram}}
+\addcontentsline{toc}{subsection}{IPEMCalcSpectrogram}
+\hypertarget{FuncRef:IPEMCalcSpectrogram}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSpectrogram,outTimes,outFrequencies] = ...
+    IPEMCalcSpectrogram(inSignal,inSampleFreq,inFrameSize,inFrameInterval,
+                        inWindowType,inFFTSize,inPlotFlag,inPlotTreshold)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Utility function for calculating/plotting the spectrogram of a signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to analyze
+  inSampleFreq = sample frequency of the incoming signal (in Hz)
+  inFrameSize = size of one analysis frame (in s)
+                if empty or not specified, 0.040 is used by default
+  inFrameInterval = interval between successive frames (in s)
+                    if empty or not specified, 0.010 is used by default
+  inWindowType = if this is a string: type of window to be used
+                 supported types are: 'bartlett','blackman','boxcar','hamming',
+                                      'hann','hanning','triang'
+                 if this is a 1-column matrix: any user defined window of size
+                 [Round(inFrameSize*inSampleFreq) 1]
+                 if empty or not specified, 'hanning' is used by default
+  inFFTSize = size of FFT to be used
+              if -1 is specified, a value corresponding to inFrameSize is used
+              if empty or not specified, the power of two >= inFrameSize
+              in samples is used
+  inPlotFlag = if non-zero, a plot is generated (showing dB levels)
+               if empty or not specified, 1 is used by default
+  inPlotTreshold = values below this level are ignored in the plot (in dB)
+                   if empty or not specified, -Inf is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSpectrogram = spectrogram data (amplitude values, so not in dB)
+  outTimes = instants at which an analysis was calculated (in s)
+  outFrequencies = frequencies used in decomposition (in Hz)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [S,T,F] = IPEMCalcSpectrogram(s,fs,0.040,0.010);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20001130
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCalcZeroCrossingRate}{IPEMCalcZeroCrossingRate}\sectionmark{IPEMCalcZeroCrossingRate}}
+\addcontentsline{toc}{subsection}{IPEMCalcZeroCrossingRate}
+\hypertarget{FuncRef:IPEMCalcZeroCrossingRate}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outZCR,outZCRFreq] = 
+    IPEMCalcZeroCrossingRate(inSignal,inSignalFreq,
+                             inFrameWidth,inFrameInterval,
+                             inZeroTolerance,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the number of zero-crossings per second for successive frames.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to be analyzed
+  inSignalFreq = sample frequency of inSignal
+  inFrameWidth = width of 1 frame (in s)
+  inFrameInterval = interval between successive frames (in s)
+  inZeroTolerance = defines a region around zero where zero-crossings are not
+                    counted (useful for noisy parts of the signal)
+                    if empty or not specified, 0 is used by default
+  inPlotFlag = if non-zero, plots the ZCR
+               if not specified or empty, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outZCR = number of zero-crossings per second for each frame
+  outZCRFreq = sample frequency of outZCR
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [ZCR,ZCRFreq] = IPEMCalcZeroCrossingRate(s,fs,0.05,0.01,0.001);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20001012
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCheckVersion}{IPEMCheckVersion}\sectionmark{IPEMCheckVersion}}
+\addcontentsline{toc}{subsection}{IPEMCheckVersion}
+\hypertarget{FuncRef:IPEMCheckVersion}{}
+
+\textbf{Usage:}
+\begin{verbatim}  function [outCompatibility,outCurrentVersion] = ...
+    IPEMCheckVersion(inComponent,inReferenceVersion)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Checks compatibility using version numbers
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inComponent = string identifying the component to check
+  inReferenceVersion = version number string to compare with
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outCompatibility = compatibility result:
+                     -1 if the current version is lower than the reference
+                      0 if the current version is the same as the reference
+                     +1 if the current version is higher than the reference
+                     empty if the component was not present at all
+  outCurrentVersion = current version number string of requested component
+                      empty if not present
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  For comparison, str2num is used on the version number strings.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Comp,CurrVer] = IPEMCheckVersion('signal','5.0');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20011204
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMClip}{IPEMClip}\sectionmark{IPEMClip}}
+\addcontentsline{toc}{subsection}{IPEMClip}
+\hypertarget{FuncRef:IPEMClip}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMClip(inSignal,inLowLimit,inHighLimit,
+                       inClipLowTo,inClipHighTo)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function clips the incoming (multi-channel) signal at the given limits.
+  Specify empty values for either one of the limits if you don't want clipping
+  at that side of the signal range.
+  Signal channels are represented by rows.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the (multi-channel) signal to be clipped
+  inLowLimit = specifies the low level clipping value: values lower than this
+               are replaced by either the limit itself or inClipLowTo
+               if empty, no clipping occurs
+  inHighLimit = specifies the high level clipping value: values higher than
+                this are replaced by either the limit itself or inClipHighTo
+                if empty or not specified, no clipping occurs
+  inClipLowTo = if non-empty, this is a replacement value for too low values
+                if empty or not specified, inLowLimit is used
+  inClipHighTo = if non-empty, this is a replacement value for too high values
+                 if empty or not specified, inHighLimit is used
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the clipped signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMClip(Signal,0.05,1,0,[]);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000419
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCombFilter}{IPEMCombFilter}\sectionmark{IPEMCombFilter}}
+\addcontentsline{toc}{subsection}{IPEMCombFilter}
+\hypertarget{FuncRef:IPEMCombFilter}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMCombFilter(inSignal,inSampleFreq,inDelay,
+                             inAttenuation,inSync)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Filters the incoming signal with a comb filter according to the
+  following scheme:
+
+       OUT = IN * (1 - inAttenuation * z^(-m) )
+       where m = round(inDelay*inSampleFreq)
+
+  In the frequency domain, this produces a comb-like frequency response,
+  in which either the peaks (if inSync == 1) or the valleys (if inSync == 0)
+  of the comb are at frequencies n.F0 (F0 = 1/inDelay).
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = input signal (each row represents a channel)
+  inSampleFreq = input signal sample frequency (in Hz)
+  inDelay = delay of feedforward branch (in s)
+  inAttenuation = attenuation ratio (0 to 1)
+  inSync = if 1, the comb's peaks are at frequencies n/delay
+           if 0, the comb's valleys are at frequencies n/delay
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the filtered signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  scomb = IPEMCombFilter(s,fs,1/500,0.98,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000208
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMContextualityIndex}{IPEMContextualityIndex}\sectionmark{IPEMContextualityIndex}}
+\addcontentsline{toc}{subsection}{IPEMContextualityIndex}
+\hypertarget{FuncRef:IPEMContextualityIndex}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outChords,outToneCenters,...
+   outContextuality1,outContextuality2,outContextuality3] = ...
+    IPEMContextualityIndex(inPeriodicityPitch,inSampleFreq,inPeriods,...
+                           inSnapShot,inHalfDecayChords,...
+                           inHalfDecayToneCenters,inEnlargement,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the contextuality index. Two methods are used:
+  - inspection: compares fixed chord images with running chord images
+                and running tone center images
+  - comparison: compares running chord images with running tone center images
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inPeriodicityPitch = periodicity pitch image
+  inSampleFreq = sample frequency of the input signal (in Hz)
+  inPeriods = periods of periodicity analysis (in s)
+  inSnapShot = time where the snapshot should be taken (in s)
+               if negative, the time is taken at abs(inSnapShot) from the end
+               of the sample
+               if empty or not specified, the time of the last sample is used
+               by default
+  inHalfDecayChords = half decay time for leaky integration into chord image
+                      if empty or not specified, 0.1 is used by default
+  inHalfDecayToneCenters = half decay time for leaky integration into tone
+                           center image
+                           if empty or not specified, 1.5 is used by default
+  inEnlargement = time by which the input signal is enlarged (in s) 
+                  if -1, 2*inHalfDecayToneCenters is used
+                  if empty or not specified, 0 is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outChords = local integration of inPeriodicityPitch into chord image
+  outToneCenters = global integration of inPeriodicityPitch into tone center
+                   image
+  outContextuality1 = correspondence between chord taken at snapshot position
+                      and running chord image
+  outContextuality2 = correspondence between chord taken at snapshot position
+                      and running tone center image
+  outContextuality3 = correspondence between running chord image and running
+                      tone center image
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Sample frequency of output signals is the same as inSampleFreq.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Chords,ToneCenters,Contextuality1,Contextuality2,Contextuality3] = ...
+    IPEMContextualityIndex(PP,PPFreq,PPPeriods);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 19991221 (originally made)
+  Koen Tanghe - 20010129 (minor code changes + documentation)
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMConvertToAMNoise}{IPEMConvertToAMNoise}\sectionmark{IPEMConvertToAMNoise}}
+\addcontentsline{toc}{subsection}{IPEMConvertToAMNoise}
+\hypertarget{FuncRef:IPEMConvertToAMNoise}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outAMNoise = ...
+    IPEMConvertToAMNoise(inSignal,inSampleFreq,inWantedSampleFreq,...
+                         inPlaySound,inNoiseBand)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Converts a signal to amplitude modulated noise (the given signal is used
+  as modulator) and plays back the sound (optionally).
+  Can be used for a quick listening to envelope-like signals.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to convert to AM noise
+  inSampleFreq = sample frequency of incoming signal (in Hz)
+  inWantedSampleFreq = wanted sample frequency for the resulting AM noise
+                       (in Hz)
+                       if empty or not specified, 22050 is used by default
+  inPlaySound = if empty, non-zero or not specified, the AM noise will be
+                played back
+                otherwise, no sound is produced
+  inNoiseBand = two element row vector specifiying the wanted the noise band
+                (in Hz)
+                if empty or not specified, broad band noise is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outAMNoise = the resulting amplitude modulated noise
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  AMNoise = IPEMConvertToAMNoise(RMS,RMSFreq,22050,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010221
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMConvertToClickSound}{IPEMConvertToClickSound}\sectionmark{IPEMConvertToClickSound}}
+\addcontentsline{toc}{subsection}{IPEMConvertToClickSound}
+\hypertarget{FuncRef:IPEMConvertToClickSound}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outClickSignal = IPEMConvertToClickSound(inClickTimes,inWantedSampleFreq,...
+                                           inTimeRange,inAmplitudes)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Converts a sequence of times into a click sound signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inClickTimes = Times where a click should be generated (in s).
+  inWantedSampleFreq = Sample frequency of the output signal (in Hz).
+  inTimeRange = Time range for which clicks should be generated (only times
+                from inClickTimes that fall into this range will be used).
+                Specified as [min max] (in s).
+                If empty or not specified, the full range will be used.
+  inAmplitudes = Amplitudes corresponding to the click times.
+                 Should be in [0...1] range.
+                 If this is a single scalar, this value will be used for all
+                 click times.
+                 If empty or not specified, 1 is used by default.
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outClickSignal = The click sound signal.
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The clicks are very simple 0 to 1 transitions (Dirac pulses).
+  The end time of the time range is exclusive.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  s = IPEMConvertToClickSound(0:0.5:5,44100,[1 4],0.8);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040423
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMConvertToMIDINoteNr}{IPEMConvertToMIDINoteNr}\sectionmark{IPEMConvertToMIDINoteNr}}
+\addcontentsline{toc}{subsection}{IPEMConvertToMIDINoteNr}
+\hypertarget{FuncRef:IPEMConvertToMIDINoteNr}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outMIDINoteNr = IPEMConvertToMIDINoteNr(inNoteString)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Converts a cell array of note specification strings to an array of
+  MIDI note numbers.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inNoteString = cell array of note specification string
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outMIDINoteNr = MIDI note number array
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Both sharps ('#') or flats ('b') can be used.
+  You can specify a sign in front of the octave part, if you want to...
+  Things like 'Cb' and 'E#' will be interpreted as, respectively, 'B' and 'F'.
+
+  If you want to compare note strings, you'll have to make sure that you
+  always stick to the same notation method (sharps OR flats).
+  If you don't, you'll have to use the note NUMBERS to test for equality,
+  and not the note STRINGS !
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMConvertToMIDINoteNr('A4')
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000315
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMConvertToNoteString}{IPEMConvertToNoteString}\sectionmark{IPEMConvertToNoteString}}
+\addcontentsline{toc}{subsection}{IPEMConvertToNoteString}
+\hypertarget{FuncRef:IPEMConvertToNoteString}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outNoteString = IPEMConvertToNoteString (inMIDINoteNr,inUseFlats)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Converts an array of MIDI note numbers to a cell array of note strings.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inMIDINoteNr = array containing MIDI note numbers
+  inUseFlats = if non-zero, flats will be used instead of sharps
+               if empty or not specified, 0 is used by default (sharps)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outNoteString = cell array with note specification strings
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Where inMIDINoteNr contains an illegal MIDI note number (NaN), the note
+  string corresponding with that value will be left empty...
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMConvertToNoteString([69 70 ; 58 57])
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000315
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCountZeroCrossings}{IPEMCountZeroCrossings}\sectionmark{IPEMCountZeroCrossings}}
+\addcontentsline{toc}{subsection}{IPEMCountZeroCrossings}
+\hypertarget{FuncRef:IPEMCountZeroCrossings}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outZeroCrossings = IPEMCountZeroCrossings(inSignal,inZeroTolerance)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Counts the number of zero crossings for each row of inSignal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to be analyzed for zero-crossings
+  inZeroTolerance = defines a region around zero where zero-crossings are not
+                    counted (useful for noisy parts of the signal)
+                    if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outZeroCrossings = number of zero crossings for each row
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  ZeroCrossing = IPEMCountZeroCrossings(MusicExcerpt,0.01);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000509
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMCreateMask}{IPEMCreateMask}\sectionmark{IPEMCreateMask}}
+\addcontentsline{toc}{subsection}{IPEMCreateMask}
+\hypertarget{FuncRef:IPEMCreateMask}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outMask = IPEMCreateMask(inTime,inStartTimes,inAmplitudes,inDecayPeriod,...
+                           inFractionAtDecayPeriod)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function creates an exponentially decaying mask from the given start
+  times and amplitudes.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inTime = the time span for which a mask is needed (in samples !)
+  inStartTimes = the start times of the masking events (in samples !)
+  inAmplitudes = the amplitudes of the masking events
+  inDecayPeriod = the time (in samples !) it takes before a single mask reaches
+                  inFractionAtDecayPeriod of its initial amplitude
+  inFractionAtDecayPeriod = fraction of original amplitude at inDecayPeriod
+                            if empty or not specified, 0.5 is used by default
+                            (i.e. half decay time)
+ 
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outMask = the requested mask
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The relation between a decay time (DT) + fraction at decay time (DF)
+  specification and a half decay time (HDT) specification is as follows:
+    HDT = DT*log(0.5)/log(DF)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Mask = IPEMCreateMask(1:1000,[20 250 400 860 900],[1 0.5 1 0.5 1],100);
+    or
+  fs = 22050; t = 0:1/fs:5-1/fs;
+  Mask = IPEMCreateMask(t,[1 2 3],[1 0.5 1],0.2);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040106
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMDoOnsets}{IPEMDoOnsets}\sectionmark{IPEMDoOnsets}}
+\addcontentsline{toc}{subsection}{IPEMDoOnsets}
+\hypertarget{FuncRef:IPEMDoOnsets}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [Ts,Tsmp] = IPEMDoOnsets(inFileName,inFilePath,inPlotFlag);
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Convenience function for detecting onsets in a sound signal.
+  The onset times are also written to a text file.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the sound file to process (with extension!)
+  inFilePath = path to the directory where the sound file is located
+               if empty or not specified, IPEMRootDir('input')\Sounds is used
+               by default
+  inPlotFlag = if non-zero, plots are generated (no plots if zero)
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  Ts = onset times in seconds
+  Tsmp = onset times in samples
+
+  Additionally, a text file containing info about the detected onsets is
+  stored in the same directory as the sound file. It has the same name as the
+  sound file without extension, but followed by '_onsets.txt'.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Ts,Tsmp] = IPEMDoOnsets('music.wav');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20011107
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMEnsureDirectory}{IPEMEnsureDirectory}\sectionmark{IPEMEnsureDirectory}}
+\addcontentsline{toc}{subsection}{IPEMEnsureDirectory}
+\hypertarget{FuncRef:IPEMEnsureDirectory}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outResult = IPEMEnsureDirectory (inDirectoryPath,inCreate)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Checks whether the given directory exists (and optionally creates it, if not)
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inDirectoryPath = full directory path to be checked (created)
+  inCreate = if non-zero, the directory will be created if it doesn't exist
+             if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outResult = 1 if the directory already existed before calling this function
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Use this function with care: it's good policy to only create a directory
+  1. if this is really necessary (let user specify directory if possible)
+  2. within the default output directory (that way, the user's disk doesn't
+     get scattered with new directories)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMEnsureDirectory(fullfile(IPEMRootDir('output'),'Test','Example1'),1);
+
+  The above line makes sure that a directory Test\Example1 exists within the
+  default output directory.
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040504
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMEnvelopeFollower}{IPEMEnvelopeFollower}\sectionmark{IPEMEnvelopeFollower}}
+\addcontentsline{toc}{subsection}{IPEMEnvelopeFollower}
+\hypertarget{FuncRef:IPEMEnvelopeFollower}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outEnvelope,outEnvelopeFreq] = ...
+     IPEMEnvelopeFollower(inSignal,inSignalFreq,inAttackTime,inReleaseTime,...
+                          inPlotFlag);
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Does envelope following on a signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = one-dimensional input signal
+  inSignalFreq = sample frequency for inSignal (in Hz)
+  inAttackTime = time it takes to reach 0.5 for a 0 to 1 step signal (in s)
+  inReleaseTime = time it takes to reach 0.5 for a 1 to 0 step signal (in s)
+                  if not specified or empty, inAttackTime is used by default
+  inPlotFlag = if not specified or empty, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outEnvelope = envelope signal
+  outEnvelopeFreq = sample frequency for outEnvelope (same as inSignalFreq)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Uses one-pole low-pass filters with different coefficients for attack and
+  release on the absolute value of the signal. The attack and release times
+  are specified as "half-value times".
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  fs = 44100;
+  s = zeros(1,fs*5);
+  s(fs:fs*3) = 1;
+  IPEMEnvelopeFollower(s,fs,0.010,0.020,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030403
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMExportFigures}{IPEMExportFigures}\sectionmark{IPEMExportFigures}}
+\addcontentsline{toc}{subsection}{IPEMExportFigures}
+\hypertarget{FuncRef:IPEMExportFigures}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMExportFigures(inInputPath,inOutputPath,inFormat,inUseIPEMLayout)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Exports figures to specified graphics format.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inInputPath = path to scan for .fig files
+                if empty or not specified, the currently opened figures are
+                exported, with the names being just 'Figure_No_1', etc...
+                (in this case, inOutputPath must be given)
+  inOutputPath = path to be used for saving the exported figures
+                 if empty or not specified, inInputPath is used by default
+  inFormat = graphics format to be used
+             this can be one of the following:
+               'lowpng' = low resolution png ('-dpng -r75')
+               'highpng' = high resolution png ('-dpng -r300')
+               'screenpng' = screen resolution png ('-dpng -r0')
+               'eps' = black & white eps ('-deps -r600')
+               'epsc' = colored eps ('-depsc -r600')
+             or an entire specification conforming to Matlab's 'print' options
+             (to be specified as a cell array of strings, see 'help print')
+             if empty or not specified, 'lowpng' is used by default
+  inUseIPEMLayout = if non-zero, the default IPEM layout settings are used
+                    if empty or not specified, each figure is used "as is"
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  Files having the same name as the figures, but with an extension depending
+  on inFormat.
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  This thing is NOT COMPILABLE because in Matlab R11.1 the print command does
+  not work when called from a compiled M-file (does work in R12 however).
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMExportFigures('E:\Koen\Docs\Research\TeacupPaper\Originals');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010528
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMExtractSegments}{IPEMExtractSegments}\sectionmark{IPEMExtractSegments}}
+\addcontentsline{toc}{subsection}{IPEMExtractSegments}
+\hypertarget{FuncRef:IPEMExtractSegments}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignalSegments = IPEMExtractSegments(inSignal,inSampleFreq,inTimeSegments)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Extracts segments from the signal according to the given time segments.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = input signal (1 row vector)
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inTimeSegments = time segments for cutting up the input signal (in s)
+                   (each row contains the start and end of a time segment)
+                   if this is a positive scalar, the signal is divided into
+                   inTimeSegments parts of equal size + an additional segment
+                   containing the remaining part of the signal (which will
+                   contain less than inTimeSegments samples)
+                   if this is a negative scalar, the signal is divided into
+                   -inTimeSegments parts where some segments will contain
+                   1 sample more than other segments
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignalSegments = 1 column cell (!) vector of signal segments
+                      (each row contains a segment)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Parts = IPEMExtractSegments(s,fs,OnsetSegments);
+  FirstSegment = Parts{1}; % etc...
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000510
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMFadeLinear}{IPEMFadeLinear}\sectionmark{IPEMFadeLinear}}
+\addcontentsline{toc}{subsection}{IPEMFadeLinear}
+\hypertarget{FuncRef:IPEMFadeLinear}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMFadeLinear (inSignal,inSampleFreq,inFadeTime)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Does a linear fade in and out of the signal over inFadeTime seconds.
+  Can be used for smoothing beginnings and endings of a synthesized signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the input signal
+  inSampleFreq = sample frequency of the signal (in Hz)
+  inFadeTime = the time to fade in and out (in s)
+               if this is a scalar, both fade in and out time are the same
+               if this is a two element row vector, inFadeTime(1) is the fade
+               in time and inFadeTime(2) is the fade out time
+               (fade times should be smaller than the signal duration)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the faded signal
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  If the sum of fade in and fade out time is >= the sound length,
+  then the fades will accumulate at the overlapping section, thus introducing
+  a quadratic fade at that section.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMFadeLinear(Signal,SampleFreq,0.01);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000913
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMFindAllPeaks}{IPEMFindAllPeaks}\sectionmark{IPEMFindAllPeaks}}
+\addcontentsline{toc}{subsection}{IPEMFindAllPeaks}
+\hypertarget{FuncRef:IPEMFindAllPeaks}{}
+
+\textbf{Usage:}
+\begin{verbatim}  thePeakIndices = IPEMFindAllPeaks (inSignal,inFlatPreference,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function finds the indices of all peaks in the given signal vector.
+  A peak is taken to occur whenever a rising part in the signal is followed
+  by a falling part.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal that is scanned for peaks (a row vector)
+  inFlatPreference = preference for choosing exact position in case of
+                     flat peaks:
+                     if 'left', the leftmost point of a flat peak is chosen
+                     if 'center', the center of a flat peak is chosen
+                     if 'right', the rightmost point of a flat peak is chosen
+                     if empty or not specified, 'center' is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outPeakIndices = a vector with the indices of the peaks (could be empty!) 
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  PeakIndices = IPEMFindAllPeaks(Signal,'center');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000509
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMFindNearestMinima}{IPEMFindNearestMinima}\sectionmark{IPEMFindNearestMinima}}
+\addcontentsline{toc}{subsection}{IPEMFindNearestMinima}
+\hypertarget{FuncRef:IPEMFindNearestMinima}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outLeftIndex, outRightIndex] = IPEMFindNearestMinima(inSignal,inPeakIndex)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Finds the nearest minima to the left and the right of the specified peak.
+  Peaks can be found with IPEMFindAllPeaks.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal to analyze
+  inPeakIndex = index in inSignal of a peak
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outLeftIndex = the index of the nearest miminum to the left of the peak
+                 if no real minimum was found, 1 is returned  
+  outRightIndex = the index of the nearest miminum to the right of the peak
+                  if no real minimum was found, length(inSignal) is returned
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [LeftIndex,RightIndex] = IPEMFindNearestMinima(Signal,PeakIndex);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000208
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMFindNoteFromFrequency}{IPEMFindNoteFromFrequency}\sectionmark{IPEMFindNoteFromFrequency}}
+\addcontentsline{toc}{subsection}{IPEMFindNoteFromFrequency}
+\hypertarget{FuncRef:IPEMFindNoteFromFrequency}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outNoteNr,outOctaveNr,outExactFrequency,outNoteString] =
+     IPEMFindNoteFromFrequency(inFrequency,inRefNoteNr,inRefOctaveNr,
+                               inRefFreq,inNotesPerOctave,inOctaveRatio)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Finds nearest note corresponding to the given frequency.
+  Supports non-standard tone scales that can be calculated like this:
+
+      Frequency = RefFreq * OctaveRatio^Exponent
+
+      where:
+
+      Exponent = (OctaveNr-RefOctaveNr) + (NoteNr-RefNoteNr)/NotesPerOctave 
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFrequency = frequency for which a corresponding note must be found
+  inRefNoteNr = the rank number of the reference note
+                if empty or not specified, 10 is used by default
+  inRefOctaveNr = the octave number of the reference note
+                  if empty or not specified, 4 is used by default
+  inRefFreq = the frequency of the reference note (in Hz)
+              if empty or not specified, 440 Hz is used
+  inNotesPerOctave = the number of notes in one octave
+                     if empty or not specified, 12 is used by default
+  inOctaveRatio = the frequency ratio between two octaves
+                  if empty or not specified, 2 is used
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outNoteNr = rank number of the note (1 to inNotesPerOctave)
+  outOctaveNr = octave number of the note (integer)
+  outExactFrequency = exact frequency of the found note (in Hz)
+  outNoteString = string representing the found note
+                  (only for standard tone scale, otherwise empty)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Getting the note name for standard tone scale:
+    MIDINoteNr = (outNoteNr-1) + 12*(outOctaveNr+1);
+    NoteString = IPEMConvertToNoteString(MIDINoteNr);
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [NoteNr,OctaveNr,Freq,Name] = ...
+    IPEMFindNoteFromFrequency([441.01 153 ; 222 94]);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000629
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGenerateBandPassedNoise}{IPEMGenerateBandPassedNoise}\sectionmark{IPEMGenerateBandPassedNoise}}
+\addcontentsline{toc}{subsection}{IPEMGenerateBandPassedNoise}
+\hypertarget{FuncRef:IPEMGenerateBandPassedNoise}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = ...
+    IPEMGenerateBandPassedNoise(inPassBands,inDuration,inSampleFreq,...
+                                indBLevel,inFFTWidth)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates a band passed noise signal using inverse FFT.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inPassBands = 2 column vector containing specification of the pass bands:
+                each row specifies a low and high frequency (in Hz)
+  inDuration = duration of the sound (in s)
+  inSampleFreq = wanted sample frequency (in Hz)
+                 if empty or not specified, 22050 is used by default
+  indBLevel = dB level for the signal (in dB)
+              if empty or not specified, -6 is used by default
+  inFFTWidth = FFT width to use for the inverse FFT
+               if -1, the next power of 2 >= number of samples is used
+               if empty or not specified, the number of samples is used
+               by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = generated band passed noise signal
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  When using an inFFTWidth that is smaller than the number of requested
+  samples, the resulting sound will consist of the appropriate number of
+  repetitions of the inverse fft of size inFFTWidth, thus introducing an
+  artificial period of the size of 1 inverse fft. For non dense noise, this
+  can become noticable.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  s = IPEMGenerateBandPassedNoise([1000 1200],1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000926
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGenerateFrameBasedSegments}{IPEMGenerateFrameBasedSegments}\sectionmark{IPEMGenerateFrameBasedSegments}}
+\addcontentsline{toc}{subsection}{IPEMGenerateFrameBasedSegments}
+\hypertarget{FuncRef:IPEMGenerateFrameBasedSegments}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSegments,outActualWidth,outActualInterval] = ...
+    IPEMGenerateFrameBasedSegments(inSignalOrDuration,inSampleFreq,...
+                                   inFrameWidth,inFrameInterval,...
+                                   inIncludeIncompleteFrames)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates (overlapping) time segments using equally sized frames.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignalOrDuration = if this is a vector, it is the signal for which to
+                       calculate the frame-based time segments
+                       if this is a scalar, it is the duration of a signal
+                       (in s) (allows to generate segments even if you don't
+                       have a signal)
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inFrameWidth = wanted width of 1 frame (in s)
+  inFrameInterval = wanted interval between frames (in s)
+  inIncludeIncompleteFrames = if non-zero, incomplete frames at the end are
+                              included as well (different lengths!)
+                              if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSegments = 2-column array of segments:
+                each row contains the start and end moment of a segment (in s)
+  outActualWidth = width used (to get an integer number of samples)
+  outActualInterval = interval used (to get an integer number of samples)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Because of the discrete nature of sampled signals, the frame width and
+  interval requested for by the caller might not be representable in the
+  resolution specified by the sample frequency.
+  In that case, the nearest width and interval that are integer multiples of
+  the sample period will be used. This is what the outActualWidth and
+  outActualInterval arguments are for.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Segments,Width,Interval] = IPEMGenerateFrameBasedSegments(1,100,0.1,0.025)
+
+  Width will be 0.1 s (as requested)
+  Interval will become 0.03 s, since 0.025 s does not exist in a 1/100 s
+  resolution 
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000418
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGeneratePitchShiftScript}{IPEMGeneratePitchShiftScript}\sectionmark{IPEMGeneratePitchShiftScript}}
+\addcontentsline{toc}{subsection}{IPEMGeneratePitchShiftScript}
+\hypertarget{FuncRef:IPEMGeneratePitchShiftScript}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMGeneratePitchShiftScript(inFileName,inFilePath,inCentsToRaise,...
+                               inCentsPerStep,inScriptFilePath,inOnlyShift)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates a CoolEdit2000 script for creating a sound file containing
+  appended pitch-shifted versions of the original sound file.
+  Generated pitch-shifted sounds can be mixed with original sound.
+
+  Way to go:
+    1. run this function on your sound file
+    2. start CoolEdit2000 and open the sound file
+    3. go to 'Options\Scripts & Batch Processing' and open the script file
+    4. deselect 'Pause at Dialogs', select the script 'shift' and press 'Run'
+    5. wait...
+    6. save your sound file (either using suffix '_shifted' or '_mixed')
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the sound file to generate a script for
+  inFilePath = path to the location of the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds is used
+               by default
+  inCentsToRaise = maximum number of cents for the pitch to raise
+                   if empty or not specified, 1200 is used by default
+  inCentsPerStep = number of cents the pitch will raise per step
+                   if empty or not specified, 100 is used by default
+  inScriptFilePath = path to the location where the script file will be saved
+                     if empty or not specified, the same location as the sound
+                     file is used by default
+  inOnlyShift = if 1, the script will only generate the shifted versions
+                of the sound signal (from low to high)
+                otherwise, it will immediately mix these shifted versions with
+                the appropriate number of copies of the original sound signal
+                if empty or not specified, 0 is used by default
+                (mixing enabled)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  A CoolEdit2000 script with the same name as the sound file, but with the
+  extension .scp
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  CoolEdit2000 scripts contain selection ranges and sample rates (which are
+  different for different sound files), so you can only use the script for the
+  sound file you created it for (or for sound files with exactly the same
+  number of samples and sampling rate)...
+
+  You can download a trial version of CoolEdit2000 from:
+      http://www.syntrillium.com
+  Make sure you select function groups 1 (Save...) and 3 (Stretching...)
+  in order to be able to run the script.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMGeneratePitchShiftScript('bottle.wav');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000418
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetAllCombinations}{IPEMGetAllCombinations}\sectionmark{IPEMGetAllCombinations}}
+\addcontentsline{toc}{subsection}{IPEMGetAllCombinations}
+\hypertarget{FuncRef:IPEMGetAllCombinations}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outCombinations = IPEMGetAllCombinations(inValueArrays)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Finds all combinations of values by picking a value from a specified set of
+  values for each of the multiple dimensions.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inValueArrays = Cell array containing for each dimension an array of the 
+                  values from which one should be chosen for a combination.
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outCombinations = Array containing all possible combinations in rows.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Comb = IPEMGetAllCombinations({[1 2 3],[10 20],[111 222 333]})
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040510
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetCrestFactor}{IPEMGetCrestFactor}\sectionmark{IPEMGetCrestFactor}}
+\addcontentsline{toc}{subsection}{IPEMGetCrestFactor}
+\hypertarget{FuncRef:IPEMGetCrestFactor}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outCrestFactor = IPEMGetCrestFactor(inSignal)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Gets the crest factor of the signal, which is defined as:
+       CF = max(abs(signal))/rms(signal))
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = input signal
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outCrestFactor = the crest factor over the entire signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,fs] = IPEMReadSoundFile;
+  CF = IPEMGetCrestFactor(s);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030415
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetFileList}{IPEMGetFileList}\sectionmark{IPEMGetFileList}}
+\addcontentsline{toc}{subsection}{IPEMGetFileList}
+\hypertarget{FuncRef:IPEMGetFileList}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outFullFiles,outFileNames,outFilePaths] = ...
+    IPEMGetFileList(inDirectory,inFilePattern,inRecurse)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Gets a list of files located in a given directory and whose names adhere
+  to a specific pattern (option for recursion).
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inDirectory = Path to the directory to search in.
+  inFilePattern = Pattern to which files should adhere in order to be listed.
+                  If empty or not specified, '*' is used by default.
+  inRecurse = If non-zero, also subdirectories are scanned.
+              If empty or not specified, 0 is used by default.
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outFullFiles = Cell array containing the full file specifications.
+  outFileNames = Cell array containing only the file names.
+  outFilePaths = Cell array containing only the paths to the files.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [F,FN,FP] = IPEMGetFileList('D:\Koen\','*.txt',1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040507
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetKurtosis}{IPEMGetKurtosis}\sectionmark{IPEMGetKurtosis}}
+\addcontentsline{toc}{subsection}{IPEMGetKurtosis}
+\hypertarget{FuncRef:IPEMGetKurtosis}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outKurtosis = IPEMGetKurtosis(inData)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Gets the kurtosis of the data, which is defined here as:
+    Kurtosis(X) = sum((X-mu)^4) / (N*sigma^4) - 3
+  where
+    mu = average of X
+    sigma = standard deviation (normalized using N) of X
+    N = number of data points in X
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inData = data vector
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outKurtosis = the kurtosis of the data
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  X = [1 2 3 1 5 6 4 3];
+  Kurtosis = IPEMGetKurtosis(X);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030415
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetLevel}{IPEMGetLevel}\sectionmark{IPEMGetLevel}}
+\addcontentsline{toc}{subsection}{IPEMGetLevel}
+\hypertarget{FuncRef:IPEMGetLevel}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outRMSLevel = IPEMGetLevel(inSignal,inUseDecibels)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the average RMS power level of a signal in dB (or not).
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = signal to be analyzed
+  inUseDecibels = if non-zero, dB units are used instead of plain RMS
+                  if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRMSLevel = average RMS level (in dB if inUseDecibels is non-zero)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The reference value of 0 dB is the level of a square wave with amplitude 1.
+  Thus, a sine wave with amplitude 1 yields -3.01 dB.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  RMSLevel = IPEMGetLevel(Signal);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040323
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetRolloff}{IPEMGetRolloff}\sectionmark{IPEMGetRolloff}}
+\addcontentsline{toc}{subsection}{IPEMGetRolloff}
+\hypertarget{FuncRef:IPEMGetRolloff}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outRolloffIndex = IPEMGetRolloff(inData,inRolloffFraction)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Gets the index R in inData for which:
+    sum(inData,1,R) = inRolloffFraction*sum(inData,1,length(inData))
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inData = Data to be analyzed (each row is analyzed separately).
+  inRolloffFraction = Column vector containing a rolloff fraction for each row
+                      in inData. If a scalar is given, the same value is used
+                      for all rows.
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRolloffIndex = column vector containing the rolloff indices for each row
+                    in inData
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  v = rand(1,20);
+  ri = IPEMGetRolloff(v,0.85);
+  v(ri)
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030523
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetRoughnessFFTReference}{IPEMGetRoughnessFFTReference}\sectionmark{IPEMGetRoughnessFFTReference}}
+\addcontentsline{toc}{subsection}{IPEMGetRoughnessFFTReference}
+\hypertarget{FuncRef:IPEMGetRoughnessFFTReference}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outReferenceValue = IPEMGetRoughnessFFTReference(indBLevel,inLength)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Returns the reference value for IPEMRoughnessFFT at the specified
+  dB level.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  indBLevel = dB level for which the reference value is requested
+  inLength = length (in s) used for calculating roughness with FFT method
+             if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outReferenceValue = the requested reference value
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The reference is taken to be an AM sine tone at the specified dB level
+  with the following properties:
+    - carrier frequency = 1000 Hz
+    - modulation frequency = 70 Hz
+    - modulation index = 1
+    - duration = 1 s
+  The reference value is calculated over the reference sound as a whole
+  (not as the mean of the calculated frames over the sound)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Ref = IPEMGetRoughnessFFTReference(-20,0.5)
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010816
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMGetSkew}{IPEMGetSkew}\sectionmark{IPEMGetSkew}}
+\addcontentsline{toc}{subsection}{IPEMGetSkew}
+\hypertarget{FuncRef:IPEMGetSkew}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSkew = IPEMGetSkew(inData)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Gets the skew of the data, which is defined here as:
+    Skew(X) = sum((X-mu)^3) / (N*sigma^3)
+  where
+    mu = average of X
+    sigma = standard deviation (normalized using N) of X
+    N = number of data points in X
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inData = data vector
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSkew = the skew of the data
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  X = [1 2 3 1 5 6 4 3];
+  Skew = IPEMGetSkew(X);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20030415
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMHandleInputArguments}{IPEMHandleInputArguments}\sectionmark{IPEMHandleInputArguments}}
+\addcontentsline{toc}{subsection}{IPEMHandleInputArguments}
+\hypertarget{FuncRef:IPEMHandleInputArguments}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [...] = IPEMHandleInputArguments(inPassedArgs,inNumFirstOptionalArg,
+                                   inDefaults)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function is a simple but general input handling routine.
+  Just pass what you got from your caller, say what variables you expect and
+  which of them are optional, and specify the defaults (which will be used to
+  replace arguments that were left empty).
+  After calling this function, you'll have the valid arguments you need to
+  proceed with.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inPassedArguments = cell array with the arguments as passed to the caller
+  inNumFirstOptionalArg = number of the first optional argument
+                          if empty, length(inDefaults)+1 is used by default
+                          (this means: no optional arguments)
+  inDefaults = cell array with default values for the arguments that were
+               left empty
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  The specified variables are set in the caller's name space or an appropriate
+  error message is returned if something was wrong with the arguments.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}
+  This is a function using IPEMHandleInputArguments:
+
+      function Test (varargin)
+      % Usage: 
+      %   Test(inArg1,inArg2,inArg3,inArg4)
+      % ----------------------------------------------------------------------
+
+      % Handle input arguments
+      [inArg1,inArg2,inArg3,inArg4] = ...
+          IPEMHandleInputArguments (varargin, 3, {'def1' 'def2' 0.1 0.2});
+
+      % Rest of code for Test
+      .....
+
+  If you now call Test the following way:
+
+      Test('abc',[],5);
+
+  the internal variables of Test after the call to IPEMHandleInputArguments
+  will be:
+
+      inArg1 = 'abc'
+      inArg2 = 'def2'
+      inArg3 = 5
+      inArg4 = 0.2
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 19991109
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMHarmonicTone}{IPEMHarmonicTone}\sectionmark{IPEMHarmonicTone}}
+\addcontentsline{toc}{subsection}{IPEMHarmonicTone}
+\hypertarget{FuncRef:IPEMHarmonicTone}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMHarmonicTone (inFundamentalFreq,inDuration,inSampleFreq,...
+                                inPhaseFlag,indBLevel,inNumOfHarmonics)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function generates a tone with a number of harmonics.
+  The amplitudes of the harmonics vary as 1/N (N = number of harmonic).
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFundamentalFreq = the main frequency in Herz
+  inDuration = the duration (in s)
+               if empty or not specified, 1 is used by default
+  inSampleFreq = the desired sample frequency for the output signal (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inPhaseFlag = for choosing whether random phase has to be used or not
+                (1 to use random phase, 0 otherwise)
+                if empty or not specified, 1 is used by default
+  indBLevel = dB level of generated tone (in dB)
+              if empty or not specified, no level adjustment is performed
+  inNumOfHarmonics = number of harmonics (including fundamental frequency)
+                     if empty or not specified, 10 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the signal for the tone
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMHarmonicTone(440,1,22050,1,-20,5);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010116
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMHarmonicToneComplex}{IPEMHarmonicToneComplex}\sectionmark{IPEMHarmonicToneComplex}}
+\addcontentsline{toc}{subsection}{IPEMHarmonicToneComplex}
+\hypertarget{FuncRef:IPEMHarmonicToneComplex}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMHarmonicToneComplex(inToneVector,inDuration,inSampleFreq,...
+                                      inPhaseFlag,indBLevel,inNumOfHarmonics)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function generates a tone complex built up of harmonic tones.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inToneVector = a 12 elements vector representing the amplitude for each tone
+                 C, C#, D, ... in the tone complex (0 = no tone, 1 = full
+                 amplitude)
+  inDuration = the duration (in s)
+               if empty or not specified, 1 is used by default
+  inSampleFreq = the desired sample frequency for the output signal (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inPhaseFlag = for choosing whether random phase has to be used or not
+                (1 to use random phase, 0 otherwise)
+                if empty or not specified, 1 is used by default
+  indBLevel = dB level of generated tone complex (in dB)
+              if empty or not specified, no level adjustment is performed
+  inNumOfHarmonics = number of harmonics for each tone (including the
+                     fundamental frequency)
+                     if empty or not specified, 10 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the signal for the tone complex
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  This is a rather simple routine because the frequencies are fixed:
+
+      notes = C4,    C#4,   D4,    D#4,   E4,    F4,    F#4,   G4,    G#4,
+      freqs = 261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3,
+
+      notes = A,     A#4,   B
+      freqs = 440.0, 466.2, 493.9
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMHarmonicToneComplex([1 0 0 0 1 0 0 1 0 0 0 0],1,22050,1,-20,5);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 19990528
+  Koen Tanghe - 20010116
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMLeakyIntegration}{IPEMLeakyIntegration}\sectionmark{IPEMLeakyIntegration}}
+\addcontentsline{toc}{subsection}{IPEMLeakyIntegration}
+\hypertarget{FuncRef:IPEMLeakyIntegration}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outLeakyIntegration = ...
+    IPEMLeakyIntegration(inSignal,inSampleFreq,inHalfDecayTime,...
+                         inEnlargement,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates leaky integration with specified half decay time.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = (multi-dimensional) input signal, each row representing a channel
+             leaky integration is performed for each channel
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inHalfDecayTime = time (in s) at which an impulse would be reduced to half
+                    its value
+                    if empty or not specified, 0.1 is used by default
+  inEnlargement = time (in s) to enlarge the input signal
+                  if -1, 2*inHalfDecayTime is used
+                  if empty or not specified, 0 is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outLeakyIntegration = the leaky integration of the input signal
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Sample frequency of outLeakyIntegration is the same as inSampleFreq.
+
+\end{verbatim}
+\textbf{Example: }
+\begin{verbatim}  LeakyIntegration = ...
+    IPEMLeakyIntegration(PeriodicyPitchMatrix,PeriodicityPitchFreq,0.1,0.1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 19991224
+  Koen Tanghe - 20010129
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMLoadANI}{IPEMLoadANI}\sectionmark{IPEMLoadANI}}
+\addcontentsline{toc}{subsection}{IPEMLoadANI}
+\hypertarget{FuncRef:IPEMLoadANI}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outANI,outANIFreq,outANIFilterFreqs] = IPEMLoadANI(inName,inPath,...
+      inANIName,inANIFreqName,inANIFilterFreqsName)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Loads an auditory nerve image and its corresponding sample frequency and
+  filter frequencies from a .mat file on disk.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inName = the name of the .mat file containing the nerve image
+           if empty or not specified, 'ANI.mat' is used by default
+  inPath = path to the .mat file
+           if empty or not specified, IPEMRootDir('code')\Temp is used
+           by default
+  inANIName = name of the auditory nerve image array
+              if empty or not specified, 'ANI' is used by default
+  inANIFreqName = name of the sample frequency of the auditory nerve image
+                  if empty or not specified, 'ANIFreq' is used by default
+  inANIFilterFreqsName = name of the filter frequencies array
+                         if empty or not specified, 'ANIFilterFreqs' is used
+                         by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outANI = the auditory nerve image
+  outANIFreq = the sample frequency of the ANI
+  outANIFilterFreqs = center frequencies used for calaculting the ANI
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [ANISchum1,ANIFreqSchum1,ANIFilterFreqsSchum1] = ...
+    IPEMLoadANI('ANIs','c:\','Schum1','Schum1Freq','Schum1FilterFreqs');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000221
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECAnalysis}{IPEMMECAnalysis}\sectionmark{IPEMMECAnalysis}}
+\addcontentsline{toc}{subsection}{IPEMMECAnalysis}
+\hypertarget{FuncRef:IPEMMECAnalysis}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outValues,outValuesFreq,outPeriods] = ...
+    IPEMMECAnalysis(inSignal,inSampleFreq,inMinPeriod,inMaxPeriod,...
+                    inStepSize,inHalfDecayTime,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Performs a periodicity analysis of a (multi-channel) signal using the
+  Minimal Energy Change algorithm. This part calculates the difference
+  values. Use IPEMMECFindBestPeriods to find the best matching periods.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = (multi-channel) signal to be analyzed
+  inSampleFreq = sample frequency of inSignal (in Hz)
+  inMinPeriod = minimum period to look for (in s)
+                if empty, 1/inSampleFreq is used by default
+  inMaxPeriod = maximum period to look for (in s)
+  inStepSize = interval between successive evaluations (in s)
+               if empty or not specified, 1/inSampleFreq is used by default
+               (this corresponds to a step size of 1 sample)
+  inHalfDecayTime = half decay time for leaky integration (in s)
+                    if empty or not specified, no integration is performed
+                    (this corresponds to inHalfDecayTime = 0)
+  inPlotFlag = if non-zero, plot will be generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outValues = cell array containing the calculated values for each channel
+              and for each period at each evaluated moment
+              (outValues{i}(j,k) represents the value calculated for the j-th
+              period at the time corresponding with index k for channel i)
+  outValuesFreq = sample frequency of outValues (in Hz)
+  outPeriods = column vector containing the periods for which values were
+               calculated (in s)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Values,ValuesFreq,Periods] = IPEMMECAnalysis(RMS,RMSFreq,0.5,5,[],1.5);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010225
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECExtractPatterns}{IPEMMECExtractPatterns}\sectionmark{IPEMMECExtractPatterns}}
+\addcontentsline{toc}{subsection}{IPEMMECExtractPatterns}
+\hypertarget{FuncRef:IPEMMECExtractPatterns}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outPatterns,outPatternLenghts,outPatternFreq] = ...
+    IPEMMECExtractPatterns(inAnalyzedSignal,inSampleFreq,inPeriods,...
+                           inBestPeriodIndices,inAnalysisFreq,...
+                           inRescalePatterns,inPlotFlag);
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Extracts the best pattern from the original signal using the results
+  of an IPEMMECAnalysis run.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inAnalyzedSignal = (multi-channel) signal that was used for IPEMMECAnalysis
+  inSampleFreq = sample frequency of inAnalyzedSignal (in Hz)
+  inPeriods = column vector with the periods that were evaluated (in s)
+  inBestPeriodIndices = 2D matrix containing the indices in inPeriods of the
+                        best periods (each row represents a channel)
+                        (if inBestPeriodIndices is single-channel while
+                        inAnalyzedSignal is multi-channel, inBestPeriodIndices
+                        is used for each channel)
+  inAnalysisFreq = sample frequency of the IPEMMECAnalysis output (in Hz)
+  inRescalePatterns = if non-zero, the patterns are rescaled between 0 and 1
+                      if empty or not specified, 0 is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outPatterns = cell array containing the extracted patterns for each channel
+                at each moment in time
+                (outPatterns{i}(j,k) represents the j-th sample of the pattern
+                extracted at the time corresponding with index k for channel i)
+  outPatternLengths = 2D array containing the length of the patterns in
+                      outPatterns (in samples) (each row represents a channel)
+  outPatternFreq = sample frequency of outPatterns (same as inAnalysisFreq)
+                   (each pattern itself is of course sampled at inSampleFreq)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The input arguments inPeriods, inBestPeriodIndices and inAnalysisFreq are
+  direct results of IPEMMECAnalysis and IPEMMECFindBestPeriods.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [P,PLengths,PFreq] = ...
+    IPEMMECExtractPatterns(RMS,RMSFreq,Periods,BestPeriodIndices,...
+                           AnalysisFreq,0,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010925
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECFindBestPeriods}{IPEMMECFindBestPeriods}\sectionmark{IPEMMECFindBestPeriods}}
+\addcontentsline{toc}{subsection}{IPEMMECFindBestPeriods}
+\hypertarget{FuncRef:IPEMMECFindBestPeriods}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outBestPeriodIndices,outSampleFreq] = ...
+    IPEMMECAnalysis(inValues,inValuesFreq,inPeriods,inPlotFlag,...
+                    inMergeType,inDecisionType)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Finds the best matching periods corresponding to the given values obtainded
+  from IPEMMECAnalysis.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inValues = cell array containing difference values from IPEMMECAnalysis
+  inValuesFreq = sample frequency for inValues
+  inPeriods = periods corresponding to the rows of the elements in inValues
+              (in s)
+  inPlotFlag = if non-zero, plot will be generated
+               if empty or not specified, 0 is used by default
+  inMergeType = type of merging in case of multi-channel input
+                supported types are:
+                'sum' = decision is made on sum of given values
+                'separate' = decision is made for each channel separately
+                if empty or not specified, 'sum' is used by default
+  inDecisionType = type of decision used to find the best matching periods
+                   supported types are:
+                   'min' = period corresponding to smallest difference value
+                   if empty or not specified, 'min' is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outBestPeriodIndices = indices corresponding to the best matching periods
+                         (so Periods(outBestPeriodIndices(i,j),1) is the best
+                         matching period for channel i at moment j, where
+                         Periods is the row matrix from IPEMMECAnalysis)
+  outSampleFreq = sample frequency of outBestPeriodIndices
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  For a single channel inValues, the merge type has no influence of course.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Best,BestFreq] = IPEMMECAnalysis(Values,ValuesFreq,Periods,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010225
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECReSynthUI}{IPEMMECReSynthUI}\sectionmark{IPEMMECReSynthUI}}
+\addcontentsline{toc}{subsection}{IPEMMECReSynthUI}
+\hypertarget{FuncRef:IPEMMECReSynthUI}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMMECReSynthUI(inAction,inData)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  User Interface callback function for interactively handling the resynthesis
+  of MEC analysis results.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inAction = string representing the type of action to take
+             (should be 'Start' when launched)
+  inData = struct containing the data needed by the interface
+           contains the following fields:
+             Sound = original sound
+             SampleFreq = sample frequency of Sound
+             Periods = periods that were analyzed
+             BestPeriodIndices = indices for detected best periods
+             AnalysisFreq = sample frequency of BestPeriodIndices
+             P = extracted patterns (see remark below)
+             PLengths = lenghts of the patterns in P
+             PFreq = sample frequency of P (same as AnalysisFreq)
+             OriginalFreq = sample frequency of contents of P
+             NoiseBands = noise bands to use for resynthesis
+             ANIFilterFreqs = filter frequencies
+                              (empty in case of non-ANI data)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  1. For more info on the data stored in inData, see input and output
+     arguments of the functions IPEMMECAnalysis, IPEMMECExtractPatterns,
+     IPEMMECSynthesis.
+  2. For the 'P' field, you have to specify P between curly braces:
+     DataStruct = struct('Sound',s,'SampleFreq',fs,....,'P',{P},...);
+     This is because of Matlab's way of handling cell arrays in struct
+     definitions.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  UIData = struct('Sound',s,'SampleFreq',fs,'Periods',Periods,...
+                  'BestPeriodIndices',BestPeriodIndices,'AnalysisFreq',Freq,...
+                  'P',{P},'PLengths',PLengths,'PFreq',PFreq,'OriginalFreq',...
+                  RMSFreq,'NoiseBands',NoiseBands,'ANIFilterFreqs',[]);
+  IPEMMECReSynthUI('Start',UIData);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010925
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECSaveResults}{IPEMMECSaveResults}\sectionmark{IPEMMECSaveResults}}
+\addcontentsline{toc}{subsection}{IPEMMECSaveResults}
+\hypertarget{FuncRef:IPEMMECSaveResults}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMMECSaveResults(inFileName,inFilePath,inSound,inSampleFreq,...
+                     inPeriods,inBestPeriodIndices,inAnalysisFreq,...
+                     inPatterns,inPatternLengths,inPatternFreq,
+                     inOriginalSignalFreq,inNoiseBands,inANIFilterFreqs,...
+                     inAppend,inSuffix)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Utility function that saves the results of IPEMMECExtractPatterns, so that
+  resynthesis can still be done at a later date, after reloading this data.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the .mat file to save the results to
+  inFilePath = full path to the location where the file must be saved
+               if empty, IPEMRootDir('output') is used by default
+  inSound = original sound
+  inSampleFreq = sample frequency of inSound (in Hz)
+  inPeriods = (see IPEMMECExtractPatterns)
+  inBestPeriodIndices = (idem)
+  inAnalysisFreq = (idem)
+  inPatterns = (see IPEMMECSynthesis)
+  inPatternLengths = (idem)
+  inPatternFreq = (idem)
+  inOriginalSignalFreq = (idem)
+  inNoiseBands = (idem)
+  inANIFilterFreqs = ANI filter frequencies (empty if non-ANI data)
+  inAppend = if non-zero, the data is appended to the data already in the file
+             if zero, empty or not specified, all old data is cleared
+  inSuffix = suffix that should be added to the general names
+             (this facilitates saving multiple result sets)
+             if empty or not specified, no suffix is used by default
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  1. For generality, the given input arguments are saved under the following
+     names:
+     'Sound','SampleFreq',Periods','BestPeriodIndices','AnalysisFreq','P',
+     'PLengths','PFreq','OrginalFreq','NoiseBands' and 'ANIFilterFreqs'.
+     A suffix can be added to these names if inSuffix is given.
+  2. You can later reload the data and perform another resynthesis using
+     IPEMMECSynthesis like shown in the example below
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMMECSaveResults('MEC_ligeti.mat','e:\temp',s,fs,Periods,...
+                     BestPeriodIndices,AnalysisFreq,P,PLengths,PFreq,...
+                     RMSFreq,NoiseBands,ANIFilterFreqs);
+  ... 
+  DataStruct = load('e:\temp\MEC_ligeti.mat');
+  IPEMMECReSynthUI('Start',DataStruct);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010228
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMMECSynthesis}{IPEMMECSynthesis}\sectionmark{IPEMMECSynthesis}}
+\addcontentsline{toc}{subsection}{IPEMMECSynthesis}
+\hypertarget{FuncRef:IPEMMECSynthesis}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outResynthesizedSound,outDetectedPeriods,outIndividualSounds] = ...
+    IPEMMECSynthesis(inPatterns,inPatternLengths,inPatternFreq,...
+                     inOriginalSignalFreq,inSelectionTime,inDuration,...
+                     inOutputFreq,inNoiseBands,indBLevel,inEnhanceContrast,...
+                     inReSynthWidth,inPlotFlag);
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates an AM modulated noise signal constructed from a repetition of the
+  pattern found at the specified time moment.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inPatterns = the patterns extracted from the original signal
+  inPatternLengths = the lengths of the patterns in inPatterns (in samples) 
+  inPatternFreq = sample frequency for inPatterns (in Hz)
+  inOriginalSignalFreq = sample frequency of the contents of the patterns
+                         (in Hz)
+  inSelectionTime = moment in time specifying the pattern to be used (in s)
+  inDuration = wanted duration of the synthesized sound (in s)
+               if empty or not specified, 3 times the maximum pattern length
+               is used by default
+  inOutputFreq = wanted sample frequency (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inNoiseBands = 2 column matrix with wanted noise bands, one row per channel
+                 (in Hz)
+                 if empty or not specified, broad band noise is used by default
+  indBLevel = wanted dB level for the resynthesized sound (in dB)
+              if empty or not specified, -20 dB is used by default
+  inEnhanceContrast = if non-zero, the pattern used for modulation of a noise
+                      band is first reshaped according to:
+                      ((P/max(abs(P))).^3)*max(abs(P))
+                      if empty or not specified, 0 is used by default
+  inReSynthWidth = if non-zero, specifies the width of one piece of
+                   resynthesized noise in samples
+                   (see IPEMGenerateBandPassedNoise for more details)
+                   if empty or not specified, the entire wanted duration
+                   is used by default
+  inPlotFlag = if non-zero, plot are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outResynthesizedSound = the resynthesized sound
+  outDetectedPeriods = duration of the periodic patterns that were used in
+                       each channel (in s)
+  outIndividualSounds = resynthesized sounds per channel
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [ss,periods,sschan] = IPEMMECSynthesis(P,PL,PFreq,RMSFreq,3,10,22050);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 20000907 (original prototype version)
+  Koen Tanghe - 20010926 (code generalization + documentation)
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMNormalize}{IPEMNormalize}\sectionmark{IPEMNormalize}}
+\addcontentsline{toc}{subsection}{IPEMNormalize}
+\hypertarget{FuncRef:IPEMNormalize}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMNormalize (inSignal, inNormalizeSeparately)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function normalizes the given (multi-channel) signal, so that all
+  values are in the range [-1,1]. Channels are represented by rows.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal to be normalized (each row represents a channel)
+  inNormalizeSeparately = if non-zero, each channel is normalized separately
+                          if zero, empty or not specified, all channels are
+                          multiplied with the same normalisation factor,
+                          so that channel level ratio's are conserved
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the normalized signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMNormalize(Signal);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000919
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMOnsetPattern}{IPEMOnsetPattern}\sectionmark{IPEMOnsetPattern}}
+\addcontentsline{toc}{subsection}{IPEMOnsetPattern}
+\hypertarget{FuncRef:IPEMOnsetPattern}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOnsetPattern,outOnsetPatternFreq] = ...
+    IPEMOnsetPattern(inSignal,inSampleFreq)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Integrate-and-fire neural net for onset-detection.
+  Based on an article by Leslie S. Smith (1996)
+  Neuron dynamics are given by:
+      dA/dt = I(t) - diss*A       with:  A = neurons' accumulated value
+                                         I = input
+                                         diss = dissipation 
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = a matrix of size [N M], where N = the number of channels
+             and M = the number of samples
+  inSampleFreq = a scalar representing the frequency at which the signal was
+                 sampled (in Hz)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOnsetPattern = a matrix of size [N M] where an element is 1 if an onset
+                    was detected
+  outOnsetPatternFreq = sample frequency of result (same as inSampleFreq)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [OnsetPattern,OnsetPatternFreq] = IPEMOnsetPattern(Signal,SampleFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000510
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMOnsetPatternFilter}{IPEMOnsetPatternFilter}\sectionmark{IPEMOnsetPatternFilter}}
+\addcontentsline{toc}{subsection}{IPEMOnsetPatternFilter}
+\hypertarget{FuncRef:IPEMOnsetPatternFilter}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOnsetSignal,outOnsetSignalFreq] = ...
+    IPEMOnsetPatternFilter (inOnsetPattern, inSampleFreq)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function takes an (multi-channel) OnsetPattern generated by 
+  IPEMOnsetPattern, and outputs a (one-dimensional) signal in which a non-zero
+  value means an onset occurred (the value is a measurement of the likeliness
+  for the onset).
+
+  Currently, the following (simple) strategy is followed:
+  an onset is detected at a certain moment, if:
+  1. a certain fraction of channels have an onset within a specific period of
+     time
+  2. the moment falls at least a minimum period of time behind the last
+     detected onset
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inOnsetPattern = a matrix of size [N M],
+                   where N = the number of channels and
+                         M = the number of samples
+  inSampleFreq = sample frequency of the input signal (in Hz)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOnsetSignal = a 1D signal having a non-zero value at detected onset-times
+                   (the clearer the onset, the higher the value)
+  outOnsetSignalFreq = sample frequency of the result (same as inSampleFreq)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [OnsetSignal,OnsetSignalFreq] = ...
+    IPEMOnsetPatternFilter(OnsetPattern,SampleFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20031209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMOnsetPeakDetection}{IPEMOnsetPeakDetection}\sectionmark{IPEMOnsetPeakDetection}}
+\addcontentsline{toc}{subsection}{IPEMOnsetPeakDetection}
+\hypertarget{FuncRef:IPEMOnsetPeakDetection}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOnsetResults,outOnsetResultsFreq] = ...
+    IPEMOnsetPeakDetection (inSignal,inSampleFreq,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Returns a pattern having a non-zero value on moments of possible onset peaks
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = a matrix of size [N,M] where N is the number of channels and
+             M is the length in samples
+  inSampleFreq = sample frequency of the incoming signal (in Hz)
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOnsetResults = a matrix of size [N,M] with a value between 0 and 1
+                    (non-zero where an onset occurs, and proportional to the 
+                    importance of the onset)
+  outOnsetResultsFreq = sample frequency of the result (same as inSampleFreq)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [OnsetResults,OnsetResultsFreq] = IPEMOnsetPeakDetection(Signal,SampleFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010122
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMOnsetPeakDetection1Channel}{IPEMOnsetPeakDetection1Channel}\sectionmark{IPEMOnsetPeakDetection1Channel}}
+\addcontentsline{toc}{subsection}{IPEMOnsetPeakDetection1Channel}
+\hypertarget{FuncRef:IPEMOnsetPeakDetection1Channel}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outPeakIndices, outImportances] = ...
+    IPEMOnsetPeakDetection1Channel(inSignal,inSampleFreq)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Returns the indices of the "important" peaks in the input signal,
+  together with an indication of the "importance" of the peak.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal to be scanned for peaks
+  inSampleFreq = the sample frequency of the signal (in Hz)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outPeakIndices = indices within the input signal where the peaks are found
+  outImportance = value between 0 and 1 showing the "importance" of a peak
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [PeakIndices,Importances] = ...
+    IPEMOnsetPeakDetection1Channel(Signal,SampleFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000510
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMPeriodicityPitch}{IPEMPeriodicityPitch}\sectionmark{IPEMPeriodicityPitch}}
+\addcontentsline{toc}{subsection}{IPEMPeriodicityPitch}
+\hypertarget{FuncRef:IPEMPeriodicityPitch}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal,outSampleFreq,outPeriods,outFANI] = IPEMPeriodicityPitch ...
+                      (inMatrix,inSampleFreq,inLowFrequency,...
+                       inFrameWidth,inFrameStepSize,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function calculates the periodicity pitch of a matrix containing 
+  neural firing patterns in different auditory channels. 
+  It is based on the idea that periodicity pitch is calculated as the summed
+  autocorrelation over bandpass filtered fluctuations in auditory channels. 
+  Due to the fact that the output of the auditory model gives the envelopes
+  of the neural firing probabilities (< 1250 Hz) it suffices to use a low-pass
+  filter in order to obtain the pitch e.g. between 80 - 1250 Hz.
+  Only the lowest frequency can be changed by inLowFrequency.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inMatrix = the input signal is a matrix of size [N M] where
+               N is the number of auditory channels (<= 40) and 
+               M is the number of samples
+             the input signal is the output of the auditory model (ANI).
+  inSampleFreq = sample frequency of the input signal (in Hz)
+  inLowFrequency = cutoff frequency (in Hz) of a first order lowpass filter
+                   applied before calculating the autocorrelation
+                   if empty or not specified, 80 is used by default
+  inFrameWidth = width of the frame used for the accumulation of the
+                 autocorrelation (in s)
+                 if empty or not specified, 0.064 is used by default
+  inFrameStepSize = stepsize or timeinterval between two inFrameWidths (in s)
+                  if empty or not specified, 0.010 is used by default
+  inPlotFlag = if non-zero, plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = periodicity pitch: a matrix of size
+              inFrameWidth * length(inMatrix) / outSampleFreq 
+  outSampleFreq = sampling rate, equal to inSampleFreq/inFrameStepSize (in Hz)
+  outPeriods = analyzed periods (in s)
+  outFANI = bandpass filtered auditory nerve images (at the original sample
+            frequency)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  As for any frame-based function, the first value of the output signal is the
+  value calculated for the first complete frame in the input signal.
+  This means the following:
+  if you have an input signal of length 1 s at a sample frequency of 1000 Hz,
+  a frame width of 0.050 s, and a frame step size of 0.010 s,
+  then there will be ceil(((1 - 0.050)*1000 + 1)/(0.010*1000)) = 96 values in
+  the output signal, where the first value corresponds to the first complete
+  frame (the interval 0 to 0.050 s)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [PP,PPFreq,PPPeriods,PPFANI] = IPEMPeriodicityPitch(ANI,ANIFreq);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 20011204 (originally made)
+  Koen Tanghe - 20050119
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMPlaySoundWithCursor}{IPEMPlaySoundWithCursor}\sectionmark{IPEMPlaySoundWithCursor}}
+\addcontentsline{toc}{subsection}{IPEMPlaySoundWithCursor}
+\hypertarget{FuncRef:IPEMPlaySoundWithCursor}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMPlaySoundWithCursor(inSignal,inSignalFreq,inAxisHandles,inTimeRange,
+                          inTimeOffset,inSpeedFactor)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Plays the given sound signal while showing a moving cursor in the given axes.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = Sound signal.
+  inSignalFreq = Sample frequency of inSignal (in Hz).
+  inAxisHandles = Handles of the axes for which a pointer should be shown.
+                  If empty or not specified, all axes of the current figure
+                  will be used by default (if no current figure, -1 is used).
+                  If -1, the sound file is drawn in a new figure.
+  inTimeRange = Range of playback in the form [starttime endtime] (in s).
+                If emtpy or not specified, the entire signal will be used.
+  inTimeOffset = Time offset of first sample (in s). This is useful when the
+                 given signal is part of a larger signal.
+                 If empty or not specified, 0 is used by default.
+  inSpeedFactor = Factor by which the sound should be sped up (>1) or slowed
+                  down (<1). If empty or not specified, 1 is used by default.
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The plots associated with the given handles are supposed to have an x-axis
+  that has a time scale in seconds.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMCalcRMS(s,fs,0.040,0.020,1);
+  IPEMPlaySoundWithCursor(s,fs);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040330
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMPlotMultiChannel}{IPEMPlotMultiChannel}\sectionmark{IPEMPlotMultiChannel}}
+\addcontentsline{toc}{subsection}{IPEMPlotMultiChannel}
+\hypertarget{FuncRef:IPEMPlotMultiChannel}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMPlotMultiChannel(inData,inSampleFreq,inTitle,inXLabel,inYLabel,...
+                       inFontSize,inChannelLabels,inChannelLabelStep,...
+                       inMinY,inMaxY,inType,inTimeOffset,inYScaleFactor)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Plots a multi-channel signal.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inData = the multi-channel signal (each row represents a channel)
+  inSampleFreq = sample frequency of the data (in Hz)
+                 if empty or not specified, 1 is used by default
+  inTitle = title for the plot
+            if empty or not specified, '' is used by default
+  inXLabel = name for the X-values
+             if empty or not specified, '' is used by default
+  inYLabel = name for the Y-values
+             if empty or not specified, '' is used by default
+  inFontSize = size of the font to be used for title (size of axes labels will
+               be set to inFontSize-2)
+               if empty or not specified, no special fontsize is set by default
+  inChannelLabels = labels for the rows of the multi-channel data
+                    if empty or not specified, 1:Rows(inData) is used
+                    by default
+  inChannelLabelStep = step size for displaying the labels of the channels:
+                       labels 1:inChannelLabelStep:NumOfRows will be used
+                       as ticks
+                       if -1, the initial automatic tick division is kept
+                       if empty or not specified, 1 is used by default
+  inMinY = minimum Y-value to be used for scaling the line plot of a channel
+           if empty or not specified min(min(inData)) is used by default
+  inMaxY = maximum Y-value to be used for scaling the line plot of a channel
+           if empty or not specified max(max(inData)) is used by default
+  inType = plot type to use:
+             0 : uses line plots for each channel, starting from tick label
+             1 : uses imagesc
+             2 : uses line plots for each channel, centered around tick label
+           if empty or not specified, 0 is used by default
+  inTimeOffset = time offset to use for the first sample (in s): the first
+                 sample will be assumed to be taken at time inTimeOffset
+                 if empty or not specified, 0 is used by default
+  inYScaleFactor = factor to be used on the Y values (can be used to scale the 
+                   range of Y values to better show the signal dynamics)
+                   if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  A graph in the current subplot of the current figure.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMPlotMultiChannel(ANI,ANIFreq,'Auditory nerve image','Time (in s)',...
+       'Auditory channels (center freqs. in Hz)',14,ANIFilterFreqs,3);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040322
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMReadSoundFile}{IPEMReadSoundFile}\sectionmark{IPEMReadSoundFile}}
+\addcontentsline{toc}{subsection}{IPEMReadSoundFile}
+\hypertarget{FuncRef:IPEMReadSoundFile}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal,outSampleFreq,outSize,outFile] = ...
+    IPEMReadSoundFile(inFileName,inFilePath,inSection,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Reads (part of) a sound file into memory.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the sound file (with extension)
+               if empty or not specified, the standard "open file" dialog box
+               can be used to select a sound file (if the user then presses
+               'Cancel', all outputs will be empty)
+  inFilePath = path to the sound file (if it does not exist, the current
+               directory is used)
+               use the empty string '' if inFilename already contains a full 
+               path specification (no extra path will be prepended)
+               if empty or not specified, IPEMRootDir('input')\Sounds is used
+               by default (if it exists)
+  inSection = section of the sound file to read, given as [start end] (in s)
+              if 'size', no samples are read: outSignal will be empty, and
+              only outSampleFreq and outSize will have relevant values
+              if empty or not specified, the entire sound file is read
+  inPlotFlag = if non-zero, a plot is generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the sound signal (each row represents a channel)
+  outSampleFreq = the frequency at which the sound was sampled (in Hz)
+  outSize = the size of the entire sound file returned as
+            [NumSamples NumChannels] (optional)
+            where NumSamples = number of samples in each channel
+                  NumChannels = number of channels
+  outFile = entire path specification of the sound file
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The 'end' in the section specification is exclusive:
+  if you want to read the first second of a sound file sampled at 1000 Hz,
+  you should specify [0 1] for inSection (and not [0 0.999]). This will read
+  samples 1 to 1000, which is a full second (the sample at time 1 s is not
+  read!).
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,fs] = IPEMReadSoundFile('schum1.wav');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040409
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMReplaceSubStringInFileNames}{IPEMReplaceSubStringInFileNames}\sectionmark{IPEMReplaceSubStringInFileNames}}
+\addcontentsline{toc}{subsection}{IPEMReplaceSubStringInFileNames}
+\hypertarget{FuncRef:IPEMReplaceSubStringInFileNames}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMReplaceSubStringInFileNames(inDir,inOriginalString,inNewString,...
+                                  inRecursive,inAffectExtensions)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Replaces a substring in the filenames of the files contained in a specific
+  directory (and its subdirectories if needed) by a new substring.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inDir = full directory path to the root directory for which the changes
+          should be applied
+  inOriginalString = substring to be replaced in the filenames
+                     if empty or not specified, '_' is used by default
+  inNewString = substring by which inOriginalString will be replaced
+                if empty or not specified, '' is used by default
+  inRecursive = if non-zero, subdirectories are also affected
+                if empty or not specified, 0 is used by default
+  inAffectExtensions = if non-zero, extensions of filenames are also affected
+                       if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  % Remove all underscores in the filenames (not the extensions) of all files
+  % under the given directory and its subdirectories
+  IPEMReplaceSubStringInFileNames('D:\Koen\Temp\Test','_','',1,0);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010522
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRescale}{IPEMRescale}\sectionmark{IPEMRescale}}
+\addcontentsline{toc}{subsection}{IPEMRescale}
+\hypertarget{FuncRef:IPEMRescale}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMRescale (inSignal,inLowLevel,inHighLevel,inScaleGlobally)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function rescales each channel of the incoming signal between the given
+  lower and upper bounds. Signal channels are represented by rows.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = the signal that is to be rescaled (each row represents a channel)
+  inLowLevel = the new value for the lowest value in the incoming signal
+               if empty or not specified, 0 is used by default
+  inHighLevel = the new value for the highest value in the incoming signal
+                if empty or not specified, 1 is used by default
+  inScaleGlobally = if non-zero, all channels are scaled in exactly the
+                    same way
+                    if zero, each channel is scaled separately
+                    if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the rescaled signal
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  1. For constant signals, inLowLevel is used as constant output level
+  2. You can specify a value for inLowLevel that is higher than the
+     inHighLevel, in which case the signal will be inverted and scaled between
+     the two given levels.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMRescale(Signal,-1,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000224
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMReshape}{IPEMReshape}\sectionmark{IPEMReshape}}
+\addcontentsline{toc}{subsection}{IPEMReshape}
+\hypertarget{FuncRef:IPEMReshape}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMReshape(inData,inShaper,inMethod,inSymmetry,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Reshapes the incoming data by substituting each original value by a 
+  new value using the given shaper matrix.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inData = 1D data vector to be reshaped
+  inShaper = shaper matrix: two column matrix of which the first column
+             represents the original value and the second column represents
+             its substituted value
+  inMethod = string with the method to be used for interpolating substituded
+             values (see description of methods in Matlab's interp1 function)
+             if empty or not specified, 'linear' is used by default
+  inSymmetry = if 1, inShaper is assumed to be one half of a curve symmetric
+               around the point zero: Y(-X) = -Y(X)
+               if 2, inShaper is assumed to be one half of a curve symmetric
+               around the Y-axis: Y(-X) = Y(X)
+               if empty or not specified, no symmetry is assumed by default
+  inPlotFlag = if non-zero, a plot is generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = reshaped data
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Only values between the min(inShaper(:,1)) and max(inShaper(:,1)) can be
+  substituted, so always make sure to include these bounds and their
+  subsitutes in inShaper. 
+  In case you make use of inSymmetry, only max(inShaper(:,1)) will play a role
+  in defining the region where values can be substituted.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  X = 0:0.1:1;
+  Y = X.^3;
+  s2 = IPEMReshape(s,[X' Y'],'linear',1,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010110
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRippleFilter}{IPEMRippleFilter}\sectionmark{IPEMRippleFilter}}
+\addcontentsline{toc}{subsection}{IPEMRippleFilter}
+\hypertarget{FuncRef:IPEMRippleFilter}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMRippleFilter(inSignal,inSampleFreq,inDelay,...
+                               inAttenuation,inSync)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Filters the incoming signal with a ripple filter according to the following
+  scheme:
+
+       OUT = IN / (1 + inAttenuation * z^(-m) )
+       where m = round(inDelay*inSampleFreq)
+
+  In the frequency domain, this produces a rippled frequency response,
+  in which either the peaks (if inSync == 1) or the valleys (if inSync == 0)
+  of the ripples are at frequencies n.F0 (F0 = 1/inDelay).
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = input signal (each row represents a channel)
+  inSampleFreq = input signal sample frequency (in Hz)
+  inDelay = delay of feedback branch (in s)
+  inAttenuation = attenuation ratio (0 to 1)
+  inSync = if 1, the ripple's peaks are at frequencies n/delay
+           if 0, the ripple's valleys are at frequencies n/delay
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the filtered signal
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMRippleFilter(Signal,SampleFreq,1/100,0.95,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRootDir}{IPEMRootDir}\sectionmark{IPEMRootDir}}
+\addcontentsline{toc}{subsection}{IPEMRootDir}
+\hypertarget{FuncRef:IPEMRootDir}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outRootDirPath = IPEMRootDir(inDirType)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function returns a default root directory for the requested type.
+  These directories are used by some of the IPEM functions.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inType = string specifying the type of info for which you want the standard
+           directory (the supported types are defined below)
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRootDirPath = the requested directory path
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}
+  *** Description of supported types ***
+  
+  'input'
+  The directory that will be used as the root of the subdirectories
+  containing data to be processed by the IPEM Toolbox code.
+  (e.g. sound files could be stored in a subdirectory called 'Sounds',
+  located in this 'input' directory)
+
+  'output'
+  Same as 'input', but for output of the IPEM Toolbox code.
+  In some special cases, the directory of the processed file is used (but this
+  will always be explicitely mentioned in the comments of such a function)
+
+  'code'
+  This is the directory where the IPEM Matlab code is located and can NOT be
+  set by setpref.
+  (e.g. 'E:\Code\Matlab\IPEMToolbox')
+
+
+  *** Supports preferences ***
+
+  You can specify the default 'input' and 'output' root directories by typing:
+
+     setpref('IPEMToolbox','RootDir_Input','directory1')
+
+  and/or
+
+     setpref('IPEMToolbox','RootDir_Output','directory2') 
+
+  where directory1 and directory2 should be replaced by the complete paths to
+  existing directories on your system.
+  If you don't set these directory preferences, the 'Temp' subdirectory in
+  your 'IPEMToolbox' directory is used by default.
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010117
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRotateMatrix}{IPEMRotateMatrix}\sectionmark{IPEMRotateMatrix}}
+\addcontentsline{toc}{subsection}{IPEMRotateMatrix}
+\hypertarget{FuncRef:IPEMRotateMatrix}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outMatrix = IPEMRotateMatrix (inMatrix,inRows,inColumns)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Rotates a matrix along its rows and/or columns.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inMatrix = matrix to process
+  inRows = number of rows by which to rotate
+           positive values mean rotation towards increasing row numbers
+  inColumns = number of columns by which to rotate
+              positive values mean rotation towards increasing column numbers
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outMatrix = the rotated matrix
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  RotMat = IPEMRotateMatrix([1 2 3; 4 5 6; 7 8 9],-1,2);
+
+  --> RotMat == [5 6 4; 8 9 7; 2 3 1]
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRoughnessFFT}{IPEMRoughnessFFT}\sectionmark{IPEMRoughnessFFT}}
+\addcontentsline{toc}{subsection}{IPEMRoughnessFFT}
+\hypertarget{FuncRef:IPEMRoughnessFFT}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outRoughness,outSampleFreq,outFFTMatrix1,outFFTMatrix2] =
+     IPEMRoughnessFFT(inANI,inANIFreq,inANIFilterFreqs,...
+                      inFrameWidth,inFrameStepSize,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Based on Leman (2000) (paper on calculation and visualization of
+  Synchronization & Roughness)
+  This function calculates three outputs:
+  1. The total energy
+  2. The energy in all channels
+  3. The energy spectrum of the neuronal synchronization 
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inANI = auditory nerve image to process, where each row represents a channel
+  inANIFreq = sample frequency of the input signal (in samples per second)
+  inANIFilterFreqs = filterbank frequencies used by the auditory model
+  inFrameWidth = the width of the window for analysing the signal (in s)
+                 if empty or not specified, 0.2 s is used by default
+  inFrameStepSize = the stepsize or time interval between two
+                    inFrameWidthInSampless (in s)
+                    if empty or not specified, 0.02 s is used by default
+  inPlotFlag = if non-zero plots are generated
+               if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outRoughness = roughness over signal
+  outSampleFreq = sampling rate of outRoughness (in Hz)
+  outFFTMatrix1 = visualisation of energy over channels
+  outFFTMatrix2 = visualisation of energy spectrum for synchronization
+                  (synchronisation index SI)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  For now, the roughness values are dependend on the used frame width.
+  So, to make usefull comparisons, only results obtained using the same frame
+  width should be compared (this should be fixed in the future...)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [Roughness,RoughnessFreq] = ...
+     IPEMRoughnessFFT(ANI,ANIFreq,ANIFilterFreqs,0.20,0.02,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Marc Leman - 20000910 (made)
+  Koen Tanghe - 20010816 (bug fix + documentation corrections + code cleanup)
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMRoughnessOfSoundPairs}{IPEMRoughnessOfSoundPairs}\sectionmark{IPEMRoughnessOfSoundPairs}}
+\addcontentsline{toc}{subsection}{IPEMRoughnessOfSoundPairs}
+\hypertarget{FuncRef:IPEMRoughnessOfSoundPairs}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outMeanRoughness,outSortedList,outRoughness,outRoughnessFreq,...
+   outUsedSection] = ...
+     IPEMRoughnessOfSoundPairs(inFiles,inPaths,inSection,...
+                               inSaveSoundCombinations,inOutputPath,...
+                               inUseReference,inPlotFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates roughness of 2-by-2 combinations of sounds.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFiles = set of sound files to be analyzed (cell array of strings)
+  inPaths = paths for the sound files
+            either a cell array of strings containing a path for each sound
+            file, or a single character array containing one path for all
+            sound files
+            if empty or not specified, IPEMRootDir('input')\Sounds is used
+            by default
+  inSection = section of the sound to be used (given as [start end] in s,
+              where Inf for the end parameter means the minimum of all sound
+              file lengths)
+              if empty or not specified, the (minimum of the) full length of
+              the sounds is used by default
+  inSaveSoundCombinations = if non-zero, the sound combinations are saved to
+                            inOutputPath
+                            if empty or not specified, 1 is used by default
+  inOutputPath = path where the sound combinations should be stored
+                 if empty or not specified, IPEMRootDir('output') is used
+                 by default
+  inUseReference = if non-zero, a reference value is used depending on the dB
+                   level (see IPEMGetRoughnessFFTReference)
+                   if empty or not specified, 0 is used by default 
+  inPlotFlag = if non-zero, plots outRoughness as a 2D map
+               if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outMeanRoughness = mean of outRoughness over the complete section
+  outSortedList = sound combinations sorted according to roughness:
+                     column 1 = roughness
+                     columns 2 and 3 = number of the first resp. second sound
+  outRoughness = 3D matrix containing the calculated roughness over the
+                 combinations of sounds, where element outRoughness(i,j,:) 
+                 are the roughness values calculated over the combination
+                 of sound i with sound j
+  outRoughnessFreq = sample frequency of outRoughness (Hz)
+  outUsedSection = section of the sound that was eventually used
+                   (same as inSection, except when inSection(2) = Inf)
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  1. The sound signals (say s1 and s2) are mixed as follows:
+       s1 = IPEMAdaptLevel(s1,-20); s2 = IPEMAdaptLevel(s2,-20);
+       s = IPEMAdaptLevel(s1+s2,-20);
+  2. All sound files should be of the same sample frequency...
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  theFiles = {'sound1.wav','sound2.wav','sound3.wav'};
+  thePaths = {'E:\Koen\Data','e:\Koen\Data','e:\Koen\Data\Sounds\New'};
+  [MeanRoughness,SortedList] = ...
+    IPEMRoughnessOfSoundPairs(theFiles,thePaths,[0.2 Inf]);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20011004
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSaveANI}{IPEMSaveANI}\sectionmark{IPEMSaveANI}}
+\addcontentsline{toc}{subsection}{IPEMSaveANI}
+\hypertarget{FuncRef:IPEMSaveANI}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSaveANI(inANI,inANIFreq,inANIFilterFreqs,inName,inPath,...
+              inANIName,inANIFreqName,inANIFilterFreqsName,inAppend)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Saves an auditory nerve image and its corresponding sample frequency and
+  filter frequencies to a .mat file on disk.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inANI = auditory nerve image array
+  inANIFreq = sample frequency of the auditory nerve image
+  inANIFilterFreqs = filter frequencies array
+  inName = the name of the .mat file for storing the nerve image
+           if empty or not specified, 'ANI.mat' is used by default
+  inPath = path to the .mat file
+           if empty or not specified, IPEMRootDir('code')\Temp is used
+           by default
+  inANIName = name for the auditory nerve image array in the mat file
+              if empty or not specified, 'ANI' is used by default
+  inANIFreqName = name for the sample frequency
+                  if empty or not specified, 'ANIFreq' is used by default
+  inANIFilterFreqsName = name for the filter frequencies array
+                         if empty or not specified, 'ANIFilterFreqs' is used
+                         by default
+  inAppend = if 1, the variables are appended to the mat file (if it already
+             exists) otherwise, a new mat file is created
+             if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSaveANI(ANI,ANIFreq,ANIFilterFreqs,'ANIs','c:\','Schum1','FreqSchum1',...
+              'FilterFreqsSchum1');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000515
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSaveVar}{IPEMSaveVar}\sectionmark{IPEMSaveVar}}
+\addcontentsline{toc}{subsection}{IPEMSaveVar}
+\hypertarget{FuncRef:IPEMSaveVar}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSaveVar (inFile,inName,inValue)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Saves a variable with name inValue and value inValue to a mat file.
+  If the file did not already exist, a new file is created first.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFile = full name (with path) of the mat file (the .mat extension will be
+           added automatically if it's not there already)
+  inName = name for the variable
+  inValue = value for the variable
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  This thing is NOT COMPILABLE because of call stack/workspace differences
+  between M-file evaluation and mex-evaluation !
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSaveVar('E:\Koen\Data\music.mat','NerveImage',ANI);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSetFigureLayout}{IPEMSetFigureLayout}\sectionmark{IPEMSetFigureLayout}}
+\addcontentsline{toc}{subsection}{IPEMSetFigureLayout}
+\hypertarget{FuncRef:IPEMSetFigureLayout}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSetFigureLayout(inFigureHandle)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Sets the layout of the figure to the IPEM defaults.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFigureHandle = handle of the figure to be adjusted
+                   if 'all' is specified, all open figures will be adjusted
+                   if empty or not specified, the current figure will be
+                   adjusted
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  FigH = figure;
+  % ... some plots ...
+  IPEMSetFigureLayout(FigH);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010129
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSetup}{IPEMSetup}\sectionmark{IPEMSetup}}
+\addcontentsline{toc}{subsection}{IPEMSetup}
+\hypertarget{FuncRef:IPEMSetup}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSetup
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function sets up the Matlab environment for working with the
+  IPEM Toolbox.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSetup;
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20011204
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSetupPreferences}{IPEMSetupPreferences}\sectionmark{IPEMSetupPreferences}}
+\addcontentsline{toc}{subsection}{IPEMSetupPreferences}
+\hypertarget{FuncRef:IPEMSetupPreferences}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSetupPreferences(inReset)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function sets up preferences for the IPEM Toolbox.
+
+  Use getpref('IPEMToolbox','preference') to get the value of a preference.
+  Use setpref('IPEMToolbox','preference',value) to set the value of a
+  preference.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inReset = if non-zero, resets all preferences to their initial values
+            if zero, initializes non-existing preferences, but keeps existing
+            ones
+            if empty or not specified, 0 is used by default
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  List of currently supported preferences:
+
+  'RootDir_Input'        - standard input directory
+                         - initial value: IPEMToolbox\Temp
+    
+  'RootDir_Output'       - standard output directory
+                         - initial value: IPEMToolbox\Temp
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSetupPreferences(1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010117
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMShepardTone}{IPEMShepardTone}\sectionmark{IPEMShepardTone}}
+\addcontentsline{toc}{subsection}{IPEMShepardTone}
+\hypertarget{FuncRef:IPEMShepardTone}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMShepardTone(inMainFreq,inDuration,inSampleFreq,...
+                              inPhaseFlag,indBLevel)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function generates a Shepard tone.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inMainFreq = the main frequency (in Hz)
+  inDuration = the duration (in s)
+               if empty or not specified, 1 is used by default
+  inSampleFreq = the desired sample frequency for the output signal (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inPhaseFlag = for choosing whether random phase is to be used or not
+                (1 to use random phase, 0 otherwise)
+                if empty or not specified, 1 is used by default
+  indBLevel = dB level of generated tone (in dB)
+              if empty or not specified, no level adjustment is performed
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the signal for the tone
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMShepardTone(440,1,22050,1,-20);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010116
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMShepardToneComplex}{IPEMShepardToneComplex}\sectionmark{IPEMShepardToneComplex}}
+\addcontentsline{toc}{subsection}{IPEMShepardToneComplex}
+\hypertarget{FuncRef:IPEMShepardToneComplex}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outSignal = IPEMShepardToneComplex (inToneVector,inDuration,inSampleFreq,...
+                                      inPhaseFlag,indBLevel)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function generates a tone complex built up of Shepard tones.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inToneVector = a 12 elements vector representing the amplitude for each tone
+                 C, C#, D, ... in the tone complex (0 = no tone, 1 = full
+                 amplitude)
+  inDuration = the duration (in s)
+               if empty or not specified, 1 is used by default
+  inSampleFreq = the desired sample frequency for the output signal (in Hz)
+                 if empty or not specified, 22050 is used by default
+  inPhaseFlag = for choosing whether random phase has to be used or not
+                (1 to use random phase, 0 otherwise)
+                if empty or not specified, 1 is used by default
+  indBLevel = dB level of generated tone complex (in dB)
+              if empty or not specified, no level adjustment is performed
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the signal for the tone complex
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  Signal = IPEMShepardToneComplex([1 0 0 0 1 0 0 1 0 0 0 0],1,22050,1,-20);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20010116
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMShowSoundFile}{IPEMShowSoundFile}\sectionmark{IPEMShowSoundFile}}
+\addcontentsline{toc}{subsection}{IPEMShowSoundFile}
+\hypertarget{FuncRef:IPEMShowSoundFile}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMShowSoundFile(inFileName,inFilePath,inNewFigureFlag)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  This function shows the waveform of the specified sound file.
+  Only .wav and .snd sound files are supported.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = the name of the sound file
+  inFilePath = the path to the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds is used
+               by default
+  inFigureFlag = if non-zero or not specified, a new figure is created
+                 if 0, the graph will be shown in the current (sub)plot
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMShowSoundFile('music.wav',[],0);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSineComplex}{IPEMSineComplex}\sectionmark{IPEMSineComplex}}
+\addcontentsline{toc}{subsection}{IPEMSineComplex}
+\hypertarget{FuncRef:IPEMSineComplex}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignal,outSubSignals] = ...
+    IPEMSineComplex(inSampleFreq,inDuration,...
+                    inFrequencies,inAmplitudes,inPhases,indBLevel)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Generates a signal consisting of pure sinusoids with constant amplitude
+  and phase.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSampleFreq = wanted sample frequency (in Hz)
+  inDuration = wanted duration (in s)
+  inFrequencies = frequency components (in Hz)
+  inAmplitudes = amplitudes for the frequency components
+                 if empty or not specified, 1 is used for all components
+  inPhases = phases for the frequency components (in radians)
+             if you specify 'random', random phase between 0 and 2*pi is used
+             if empty or not specified, 0 is used for all components
+  indBLevel = normalization level (in dB) for the generated sound
+              (the signals in outSubSignals are not normalized)
+              if empty or not specified, no normalization is performed
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignal = the generated signal
+  outSubSignals = multi-channel signal where each row contains the generated
+                  sine wave for the corresponding frequency
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  s = IPEMSineComplex(22050,1,[110 220 550 660],[1 0.5 0.8 0.4],'random',-6);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20020506
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSnipSoundFile}{IPEMSnipSoundFile}\sectionmark{IPEMSnipSoundFile}}
+\addcontentsline{toc}{subsection}{IPEMSnipSoundFile}
+\hypertarget{FuncRef:IPEMSnipSoundFile}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outSignalSegments,outSampleFreq] = ...
+    IPEMSnipSoundFile(inFileName,inFilePath,inTimeSegments,...
+                      inWriteSegments,inOutputPath)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Snips the sound file into segments.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the sound file
+  inFilePath = location of the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds is
+               used by default
+  inTimeSegments = time segments for cutting up the input signal (in s)
+                   (each row contains the start and end of a time segment)
+                   if this is a positive scalar, the signal is divided into
+                   inTimeSegments parts of equal size + an additional segment
+                   containing the remaining part of the signal (which will
+                   contain less than inTimeSegments samples)
+                   if this is a negative scalar, the signal is divided into
+                   -inTimeSegments parts where some segments will contain
+                   1 sample more than other segments
+  inWriteSegments = if non-zero, the segments are written to separate sound
+                    files in inOutputPath (the name of the files is the
+                    original name appended with the number of the segment)
+                    if empty or not specified, 0 is used by default
+  inOutputPath = ouput path used when sound files are written
+                 if empty or not specified, the same directory as the sound
+                 file is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outSignalSegments = the wanted signal segments
+  outSampleFreq = sample frequency of the original sound file (and segments)
+                  (in Hz)
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSnipSoundFile('dnb_drumloop_1patt.wav',[],-16,'E:\Koen\Data\Temp');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000419
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMSnipSoundFileAtOnsets}{IPEMSnipSoundFileAtOnsets}\sectionmark{IPEMSnipSoundFileAtOnsets}}
+\addcontentsline{toc}{subsection}{IPEMSnipSoundFileAtOnsets}
+\hypertarget{FuncRef:IPEMSnipSoundFileAtOnsets}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMSnipSoundFileAtOnsets (inFileName,inFilePath,inOutputPath)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Calculates the onsets for the specified sound file and cuts the sound file
+  into new sound segments at these onset times.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileName = name of the sound file
+  inFilePath = location of the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds is
+               used by default
+  inOutputPath = path where the sound segments should be stored
+                 if empty or not specified, the same directory as the sound
+                 file is used by default
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMSnipSoundFileAtOnsets('dnb_drumloop_1patt.wav',[],...
+                            'E:\Koen\SnippedSamples');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000209
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMStripFileSpecification}{IPEMStripFileSpecification}\sectionmark{IPEMStripFileSpecification}}
+\addcontentsline{toc}{subsection}{IPEMStripFileSpecification}
+\hypertarget{FuncRef:IPEMStripFileSpecification}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outParts = IPEMStripFileSpecification (inFileSpecification)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Strips a complete file specification into its subparts.
+  Can also be used to strip directory paths in their subparts.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inFileSpecification = the complete file specification
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outParts = a struct containing the following information:
+  outParts.FileName = string containing the name of the file
+  outParts.Name = name of the file without extension
+  outParts.Extension = extension of the file
+  outParts.Path = complete path towards the file
+  outParts.PathParts = cell array containing the subparts of the path
+                       specification
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  1. Only tested on Windows!
+  2. If the specification doesn't end on an extension, it is assumed to be a
+     directory path.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  theParts = IPEMStripFileSpecification('D:\Koen\Data\Sounds\schum1.wav');
+  --->
+  theParts.FileName = 'schum1.wav'
+  theParts.Name = 'schum1'
+  theParts.Extension = 'wav'
+  theParts.Path = 'D:\Koen\Data\Sounds'
+  theParts.PathParts = {'D:' 'Koen' 'Data' 'Sounds'}
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20000607
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMToneScaleComparison}{IPEMToneScaleComparison}\sectionmark{IPEMToneScaleComparison}}
+\addcontentsline{toc}{subsection}{IPEMToneScaleComparison}
+\hypertarget{FuncRef:IPEMToneScaleComparison}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outError,outBestRatioDiffs] = IPEMToneScaleComparison;
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Compares tonescales with different subdivisions to the 'ideal case'
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outError = error compared to ideal case
+  outBestRatioDiffs = difference of the best ratio's with the ideal ones
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  Works for the 3 ideal ratio's 6/5, 5/4, 3/2
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 19990816
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMToolboxVersion}{IPEMToolboxVersion}\sectionmark{IPEMToolboxVersion}}
+\addcontentsline{toc}{subsection}{IPEMToolboxVersion}
+\hypertarget{FuncRef:IPEMToolboxVersion}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMToolboxVersion
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Returns the version of the IPEM Toolbox
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outVersionString = string with full version information
+  outMajor = major version number
+  outMinor = minor version number
+  outType = version type string (either 'beta' or empty)
+  outBuildDate = build date of this version using the format 'YYYYMMDD',
+                 where YYYY = year, MM = month and DD = day
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20050120
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMWriteSoundFile}{IPEMWriteSoundFile}\sectionmark{IPEMWriteSoundFile}}
+\addcontentsline{toc}{subsection}{IPEMWriteSoundFile}
+\hypertarget{FuncRef:IPEMWriteSoundFile}{}
+
+\textbf{Usage:}
+\begin{verbatim}  outResult = IPEMWriteSoundFile(inSignal,inSampleFreq,inFileName,...
+                                 inFilePath,inSection)
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Writes (part of) a sound signal to file.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSignal = sound signal (each row represents a channel)
+  inSampleFreq = sample frequency of sound signal (in Hz)
+  inFileName = name for the sound file (with extension)
+               if empty or not specified, the standard "Write file" dialog box
+               can be used to select a sound file to write to
+  inFilePath = path for the sound file
+               if empty or not specified, IPEMRootDir('input')\Sounds is used
+               by default
+  inSection = section of the sound signal to be written, given as [start end]
+              (in s)
+              if empty or not specified, the entire sound signal is written
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outResult = usually 1
+              0 if the user pressed 'Cancel' when selecting a sound file
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  The 'end' in the section specification is exclusive:
+  if you want to write the first second of a sound signal sampled at 1000 Hz,
+  you should specify [0 1] for inSection (and not [0 0.999]). This will read
+  samples 1 to 1000, which is a full second (the sample at time 1 s is not
+  written!).
+
+  Always writes 16-bit.
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  IPEMWriteSoundFile(s,fs,'test.wav');
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20040323
+\end{verbatim}
+
+
+\newpage
+\sectionmark{MEC pattern extraction application}
+~\vfill
+\begin{center}
+   \section*{Demo functions}
+   \subsection*{MEC pattern extraction application}
+\end{center}
+\vfill
+\addcontentsline{toc}{section}{Demo functions - MEC pattern extraction application}
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMDemoMECRhythmExtraction}{IPEMDemoMECRhythmExtraction}\sectionmark{IPEMDemoMECRhythmExtraction}}
+\addcontentsline{toc}{subsection}{IPEMDemoMECRhythmExtraction}
+\hypertarget{FuncRef:IPEMDemoMECRhythmExtraction}{}
+
+\textbf{Usage:}
+\begin{verbatim}  IPEMDemoMECRhythmExtraction
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Starts the demonstration of the MEC algorithm used for the extraction of
+  rhythmic patterns in sound.
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20020912
+\end{verbatim}
+
+
+\newpage
+\section*{\hyperlink{Concepts:IPEMDemoStartMEC}{IPEMDemoStartMEC}\sectionmark{IPEMDemoStartMEC}}
+\addcontentsline{toc}{subsection}{IPEMDemoStartMEC}
+\hypertarget{FuncRef:IPEMDemoStartMEC}{}
+
+\textbf{Usage:}
+\begin{verbatim}  [outOriginalSound,outResynthesizedSound,outSampleFreq,outDetectedPeriods,...
+   outIndividualSounds] = ...
+    IPEMDemoStartMEC(inSoundFile,inSoundFilePath,inMinPeriod,inMaxPeriod,...
+                     inSelectionTime,inStep,inHalfDecayTime,...
+                     inResynthDuration,inRescalePatterns,...
+                     inPatternIntegrationTime,inEnhanceContrast,...
+                     inSaveMECResults,inUseMode);
+
+\end{verbatim}
+\textbf{Description:}
+\begin{verbatim}  Starts an entire MEC analysis and resynthesis run for the given sound file.
+
+\end{verbatim}
+\textbf{Input arguments:}
+\begin{verbatim}  inSoundFile = sound file to be processed
+  inSoundFilePath = path to the sound file
+                    if empty or not specified, IPEMRootDir('input')\Sounds
+                    is used by default
+  inMinPeriod = minimum period to look for (in s)
+                if empty or not specified, 0.5 is used by default
+  inMaxPeriod = maximum period to look for (in s)
+                if empty or not specified, 5 is used by default
+  inSelectionTime = selected moment in time to extract current pattern (in s)
+                    if empty or not specified, 3 is used by default
+  inStep = integer specifying number of samples between successive
+           calculations
+           if empty or not specified, 1 is used by default (every sample)
+  inHalfDecayTime = half decay time for leaky integration of energy
+                    differences (in s)
+                    if empty or not specified, 1.5 is used by default
+  inResynthDuration = duration (in s) of resynthesized sound
+                      if empty or not specified, 10 is used by default
+  inRescalePatterns = if non-zero, patterns are rescaled between 0 and 1
+                      if empty or not specified, 0 is used by default
+  inPatternIntegrationTime = half decay time for leaky integration of patterns
+                             (in s)
+                             if empty or not specified, 0 is used by default
+  inEnhanceContrast = if non-zero, the "contrast" in the resynthesized sound
+                      is enhanced (see IPEMMECSynthesis for more details on
+                      how this is done)
+                      if empty or not specified, 0 is used by default
+  inSaveMECResults = if non-zero, intermediate results of the analysis that
+                     are necessary for later resynthesis, are saved to a .mat
+                     file
+                     if zero, empty or not specified, results are not saved
+  inAnalysisType = if 1, the RMS of the sound signal is used
+                   if 2, the RMS of 10 ANI ch. (summed diff. values) is used
+                   if 3, the RMS of 10 ANI ch. (separate diff. values) is used
+                   if empty or not specified, 1 is used by default
+
+\end{verbatim}
+\textbf{Output:}
+\begin{verbatim}  outOriginalSound = original sound
+  outResynthesizedSound = resynthesized sound
+  outSampleFreq = sample frequency for all returned sounds (Hz)
+  outDetectedPeriods = detected periods in each channel (in s)
+  outIndividualSounds = individual resynthesized sounds per channel
+
+\end{verbatim}
+\textbf{Remarks:}
+\begin{verbatim}  If saving of intermediate results is requested, data is saved to a .mat file
+  with the name 'MEC_xxx.mat', where xxx is the name of the sound file without
+  extension. The location of this file will be IPEMRootDir('output').
+
+\end{verbatim}
+\textbf{Example:}
+\begin{verbatim}  [s,ss,fs,periods,sschan] = ...
+    IPEMDemoStartMEC('ligeti.wav',[],0.4,5,3,2,1.5,10,1,0.5,1,1,1);
+
+\end{verbatim}
+\textbf{Authors:}
+\begin{verbatim}  Koen Tanghe - 20020222
+\end{verbatim}
+
+

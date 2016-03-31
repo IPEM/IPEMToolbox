@@ -1,0 +1,46 @@
+===============================================================================
+Log of important changes to the IPEM Toolbox
+===============================================================================
+Most recent changes are at the top of this file.
+Dates are specified in the following format:
+YYYYMMDD, where YYYY = 4 digits year  ;)
+                MM   = 2 digits month
+                DD   = 2 digits day
+
+-------------------------------------------------------------------------------
+20050120 - Version 1.01 released
+-------------------------------------------------------------------------------
+This is essentially the same as version 1.00, but it is now released under the 
+GNU GPL license (contains IPEMPeriodicityPitch bug fix though).
+
+-------------------------------------------------------------------------------
+20011204 - IPEMPeriodicityPitch
+-------------------------------------------------------------------------------
+Bug fix: Matlab's xcorr function returns flipped vectors in Matlab 6.0 compared to Matlab 5.3.1 !!!
+From now on, only Matlab 6.0 is supported...
+
+-------------------------------------------------------------------------------
+20010627 - IPEMRoughnessOfSoundPairs
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+20010627 - IPEMCalcFFT
+-------------------------------------------------------------------------------
+Issues warning if FFTSize is smaller than signal size.
+Normalization uses FFTSize in that case.
+
+-------------------------------------------------------------------------------
+20010626 - IPEMGetRoughnessFFTReference
+-------------------------------------------------------------------------------
+Calculated on the fly to ensure automatic consistency with current version of
+IPEMRoughnessFFT.
+
+-------------------------------------------------------------------------------
+20010402 - IPEMReadSoundFile
+-------------------------------------------------------------------------------
+If no name is given, the standard "open file" dialog is used to let the user
+select a file.
+
+-------------------------------------------------------------------------------
+20010228 - Version 1.00 released
+-------------------------------------------------------------------------------

@@ -1,0 +1,165 @@
+% --------------------------------------------------------------------------------
+\newpage
+\section{Rhythm Module}
+% --------------------------------------------------------------------------------
+
+% Make general target
+\hypertarget{Concepts:MinimalEnergyChangeModule}{}
+
+% Make target for following functions:
+\hypertarget{Concepts:IPEMMECAnalysis}{}
+\hypertarget{Concepts:IPEMMECExtractPatterns}{}
+\hypertarget{Concepts:IPEMMECReSynthUI}{}
+\hypertarget{Concepts:IPEMMECSynthesis}{}
+\hypertarget{Concepts:IPEMMECSaveResults}{}
+
+\subsection*{Introductory description}
+% --------------------------------------------------------------------------------
+
+The Minimal Energy Change Module (MECM) calculates the
+fundamental period of a signal. The input is a sound file and the
+output is an estimation of the fundamental period at each time
+step. The technique used is a generalization of the Average
+Magnitude Difference Function, known as AMDF
+\citeyear{article:LemanVerbeke:Ieper:2000}. The basic idea is
+that:
+\begin{itemize}
+\item
+repeating patterns have a more or less constant energy over the
+period of the repeating pattern
+\item
+minimal changes of this energy point to the period of the
+repetitive pattern.
+\end{itemize}
+In applying MEC to rhythm detection we perform the analysis on
+the energy patterns in the auditory nerve images. This module
+then has its place in the image transformation chart as shown in
+Fig.~\ref{ImageTransformationModulesMECM}.
+\begin{figure}[h]
+  \centering
+\includegraphics[width=14cm]{IeperFigures/ImageTransformationModulesMECM}
+  \caption{Chart of image transformation modules, with OM highlighted}
+  \label{ImageTransformationModulesMECM}
+\end{figure}
+
+
+\subsection*{Formal logical description}
+% --------------------------------------------------------------------------------
+The  Minimal Energy Change Module applied to the recognition of
+repetition in rhythm involves:
+\begin{equation}
+    APM: s(t) \rightarrow e(t,c) \\
+    RMS: e(t,c) \rightarrow r(t,c)
+\end{equation}
+where APM provides the auditory nerve images and where RMS
+considers the energy in these images. The application of MEC
+involves:
+\begin{equation}
+    MEC1:  r(t,c) \rightarrow m(\tau,t,c)
+    \end{equation}
+where MEC1 performs a periodicity analysis of these energies and
+outputs the estimated periodicity patterns $m(\tau,t,c)$, where
+$t$ is time as usual, $\tau$ is the period, and $c$ is the
+auditory channel.
+To obtain the summary MEC-analysis, one has to
+sum over all auditory channels, which gives:
+\begin{equation}
+    m(\tau,t) = \sum_{c=1}^{C} m(\tau,t,c)~=~\tilde{m}(t)
+\end{equation}
+Hence, the MEC-function can be summarized as:
+\begin{equation}
+    MEC:  \tilde{r}(t) \rightarrow \tilde{m}(t)
+\end{equation}
+In this notation, one should take into account that the tilde
+character, indicating a vector representation, applies to
+different dimensions. The components of $\tilde{r}(t)$ are the
+channels, while the components of $\tilde{m}(t)$ are the
+different periods considered in the analysis. A derived value is
+the so-called best period, which we obtain by taking the minimum
+in each $\tilde{m}(t)$ for fixed $t$, hence:
+\begin{equation}
+    MEC:  \tilde{r}(t) \rightarrow \tilde{m}(t) \rightarrow p(t)
+\end{equation}
+\subsection*{Signal processing description}
+% --------------------------------------------------------------------------------
+The MEC-algorithm takes a signal $s(t)$ and its delayed copy
+$s(t-\tau)$. It then calculates the difference between both
+signals, takes the absolute value, and integrates the result:
+\begin{equation}\label{MECM1}
+  a(\tau,t)~=~
+   \int_{0}^{t}~\left|~
+   s(t'-\tau)-s(t') ~\right|~
+  }~dt'~
+\end{equation}
+where $a(\tau,t)$ at fixed $t$ contains an analysis for all
+$\tau$. $\tau$ is typically chosen in the region of interest. For
+rhythm detection, this may be from 400 ms to 1 s. The obtained
+analysis $a(\tau,t)$ at fixed $t$ is then minimized:
+\begin{equation}\label{MECM2}
+  p(t) = ~min_{\tau>0}~a(\tau,t)
+\end{equation}
+which gives a value $p$ for the best period at each time step $t$.
+
+In practice, we can build in more stability by leaky-integrating
+the $a(\tau,t)$ over $t$:
+\begin{equation}\label{MECM1B}
+  a(\tau,t)~=~
+   \int_{0}^{t}~\left|~
+   s(t'-\tau)-s(t') ~\right|~
+  e^{\beta(t-t')}~dt'
+\end{equation}
+and apply Expression \ref{MECM2}.
+
+When applied to the signal in different auditory channels, the
+calculation will be applied to each channel, thus giving
+$a(\tau,t,c)$). To get the best period, one may calculate $p(t)$
+using $\sum_{c=1}^{C}a(\tau,t,c)$.
+
+\subsection*{Implementation}
+% --------------------------------------------------------------------------------
+\hyperlink{FuncRef:IPEMMECAnalysis}{IPEMMECAnalysis} - Performs a
+periodicity analysis of a multi-channel signal using the MEC model
+
+\subsection*{Examples}
+% --------------------------------------------------------------------------------
+The first steps involve the preparation of the signal in which we want to
+look for periodicity.
+This is done by:\\\\
+\IPEMCodeExtract{
+ [ANI,ANIFreq,ANIFilterFreq] = IPEMCalcANIFromFile('SchumannKurioseGeschichte.wav');
+ }\\
+\IPEMCodeExtract{
+ [RMSSignal,RMSFreq] = IPEMCalcRMS(ANI,ANIFreq,0.05,0.005);
+}\\
+\IPEMCodeExtract{
+ [Periods,Best,AnalysisFreq,Values] = IPEMMECAnalysis(RMSSignal,RMSFreq,1/4,1,0.050,1.5);
+}\\
+The MEC Module has stored the time code for the periods in
+\IPEMCodeExtract{Periods}, the best periods found in all channels
+in \IPEMCodeExtract{Best}, and all values $m(\tau,t,c)$ are
+stored in \IPEMCodeExtract{Values}. The dataformat of
+\IPEMCodeExtract{Values} is described in
+\hyperlink{FuncRef:IPEMMECAnalysis}{IPEMMECAnalysis}. Just to give
+you an example of how to work with MATLAB, we sum over all
+channels $c$ in the
+following way:\\\\
+ \begin{IPEMCodeEnvironment}
+ SummaryPeriodicity = zeros(size(Values{1}(:,:))); \\
+ for channel = 1:40\\
+  SummaryPeriodicity = SummaryPeriodicity + Values{channel}(:,:);\\
+ end\\
+\end{IPEMCodeEnvironment}\\
+The values in \IPEMCodeExtract{SummaryPeriodicity} contain the
+periodicity analysis over all channels which can be visualized
+using the MATLAB function:\\\\
+ \begin{IPEMCodeEnvironment}
+  imagesc((1:length(SummaryPeriodicity))/AnalysisFreq,Periods,SummaryPeriodicity);\\
+  axis xy;colormap (1-gray)\\
+\end{IPEMCodeEnvironment}\\
+With\\\\
+ \begin{IPEMCodeEnvironment}
+ [M,I]=min(SummaryPeriodicity); hold on;\\
+ plot((1:length(I))/AnalysisFreq,Periods(I));\\
+\end{IPEMCodeEnvironment}\\
+we plot the best periods of the summary periodicity on top of the
+image. Notice that the periodicity is found after 2 s.

@@ -1,0 +1,10 @@
+# Compiled source #
+###################
+*.o
+
+#backup files
+*~
+
+#matlab data files
+*.ani
+*.dat

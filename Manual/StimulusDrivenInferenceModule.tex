@@ -1,0 +1,85 @@
+% --------------------------------------------------------------------------------
+\newpage
+\section{Stimulus-Driven Inference Module}
+% --------------------------------------------------------------------------------
+
+The Stimulus-Driven Inference Module (SDIM) realizes a mapping of two images onto a
+scale:
+\begin{equation}
+SDIM: \tilde{p}_{T1} \bigotimes \tilde{p}_{T2} \rightarrow [-1 ... 1]
+\end{equation}
+ where $T1$ and $T2$ are standing for the respective echos and $\bigotimes$
+ represents the
+calculation of a correlation coefficient. Two types of stimulus-driven inference are
+considered, called {\sl Method I} and {\sl Method II}. They introduce two inference
+strategies connected to two different short-term memory models (see discussion):
+\begin{itemize}
+\item
+    In Method I, a local image at the end of the probe tone is fixed, and this image is
+    compared with running images over the whole stimulus. This can be formally expressed
+    as:
+    \begin{displaymath}
+    SDIM_{Method I}: \tilde{p}_{T1}(\tau) \bigotimes \tilde{p}_{T2}(t) \rightarrow [-1 ...
+    1]
+    \end{displaymath}
+    where $\tau$ represents a fixed time instance, typically situated at the end of the
+    probe tone, and $t$ represents the running time.
+\item
+    In Method II, the local images are compared with the global images at run-time. The
+    formal expression is:
+    \begin{displaymath}
+    SDIM_{Method II}: \tilde{p}_{T1}(t) \bigotimes \tilde{p}_{T2}(t) \rightarrow [-1 ...
+    1]
+    \end{displaymath}
+    where $t$ represents the running time for both the local and global images.
+\end{itemize}
+
+Method I and Method II can be illustrated with the raising
+diatonic C major scale. Given this context-defining sequence, and
+12 different probe tones, 12 inferences will be inferred. Each
+context-defining sequence plus probe tone is called a {\sl trial}.
+The sound of each trial has been processed, first, with APM, PCM,
+and EMM. The echo for local and global images is set to $T=0.1$,
+and $T=1.5$, respectively. In Fig.~\ref{IM}, a trial is shown
+using probe tone $c$). For each trial, the stimulus-driven
+inference is calculated as follows:
+
+\begin{itemize}
+\item
+    Using Method I, a fixed local image is taken at the end of the stimulus and this image
+    is correlated with the running global images. Figure \ref{scaleMethodI} shows the
+    stimulus-driven inferences for the 12 trials. At each time step, this figure shows a
+    correlation coefficient for twelve probes. What is seen, therefore, is the profile of
+    the stimulus while it develops through time.
+
+    During the development of the profile, different stages can be distinguished. They
+    reflect the way a profile is built up during the temporal deployment of the stimulus.
+    Each time a tone of the scale is introduced, its corresponding rating pops up. It
+    decays when the pitch image corresponding to the note is no longer present.
+
+\item
+    Using Method II, the local images are correlated with the global images at run-time.
+    Figure \ref{scaleMethodII} shows the stimulus-driven inference for the twelve
+    different trials. As a matter of fact, the part of the stimulus that defines the tonal
+    context shows the same stimulus-driven inference for all twelve trials. The situation
+    changes at the time when the probes are introduced. At that time the local images
+    start to get different from the global image in a why that depends on the probe. Since
+    all probes are different, one obtains different correlation coefficients for each
+    probe.
+\end{itemize}
+
+Starting from the time instance where the local image of Method I is fixed (typically
+at the end of the trial), the profiles of Method I and Method II are exactly the same
+and they remain the same until the complete decay of the local image (not shown on the
+figure). The profile at that time is shown in Fig.~\ref{ProfileScale}. The time
+shortly after the stimulus presentation corresponds with the time at which the
+listener has to make a judgement. Method I has been introduced basically because it
+provides interesting information of the change in stimulus with respect to the probes.
+The probes ``inspect" so to speak the stimulus during its temporal deployment. Method
+II gives the instantaneous ``tension" of a local image with respect to the global
+image. The tension is due to the differences in the echo of both images. The longer
+echo of the global images smear out the tonal events of the stimulus over a longer
+past, hence they contain more residues of past tonal events. Method I and Method II
+actually assume a different memory model: an short-term episodic (echoic) memory in
+Method I, and a short-time run-time (echoic) memory in Method II, see
+Sect.~\ref{Results}.

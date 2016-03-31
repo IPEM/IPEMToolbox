@@ -1,0 +1,119 @@
+h1. IPEM Toolbox
+
+bq. *An open source auditory toolbox for perception-based music analysis.*
+
+h2. Aims
+
+As auditory modeling increases in complexity there is a thorough need for higher-level working tools and companion manuals. The IPEM Toolbox provides foundations and tools for perception-based music analysis within a modern laboratory environment (Matlab).
+It departs from sound and takes human perception as the basis for musical feature extraction and higher-level conceptualization and representation, combining experimental results in sound/music perception and modeling techniques into a powerful paradigm for music research.
+
+The IPEM Toolbox aims at:
+
+* Providing researchers who work on projects inspired by auditory processing in Matlab with a working tool for music analysis.
+* Offering students an opportunity to become acquainted with auditory processing in Matlab.
+* Helping students to understand the mechanisms involved with the perception of sound.
+* Permit consolidation and improvement by inviting users to evaluate the IPEM Toolbox.
+
+h2. Content
+
+The IPEM Toolbox consists of a set of Matlab functions for musical auditory modeling which will allow users to incorporate these tools into their own research.
+
+The PDF manual that comes with the IPEM Toolbox documents both the concepts of the implemented models and the usage of the functions.
+
+The IPEM Toolbox is useful to researchers interested in music content analysis and automatic extraction and description of musical features. As already mentioned above, it is our aim to provide functions that allow researchers to deal with different aspects of feature extraction in the field of perception (i.e. of chord and tonality, pitch, sensory dissonance, onset detection, beat and meter extraction, timbre characteristics).
+
+h2. Download
+
+Download the latest release here: "*2014.01.14 - IPEM Toolbox 1.02* - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX":http://www.ipem.ugent.be/Toolbox/releases/2014.01.14.IPEMToolbox_1.02_Matlab_Octave_UNIX_Windows.zip.
+
+h2. Further Reading
+
+* "The IPEM Toolbox website":http://www.ipem.ugent.be/Toolbox
+* "Introduction to the IPEM Toolbox for Perception-based Music Analysis":http://www.ipem.ugent.be/Toolbox/IT_PaperMeeting.pdf, M. Leman, M. Lesaffre, K. Tanghe, in: Proceedings of the XIII Meeting of the FWO Research Society on Foundations of Music Research, Ghent, Belgium, March 2, 2001
+* "PowerPoint presentation and examples":http://www.ipem.ugent.be/Toolbox/IPEMtoolboxNL.zip, 2001 (in Dutch)
+* Pitch and Voiced/Unvoiced Determination with an Auditory Model, Luc M. Van Immerseel, J.P. Martens, 1992. A description of the auditory model used, in a modified form, by the IPEM Toolbox.
+* "Janata Lab Music Toolbox (JLMT)":http://atonal.ucdavis.edu/resources/software/jlmt/ The JLMT consists of a series of MATLAB functions for performing analyses of musical audio signals. The package is an adjunct to an extant Matlab toolbox, the IPEM Toolbox, developed for perception-based music analysis. The JLMT makes significant contributions to the IPEM Toolbox by adding a flexible job manager, expanding the parameter space used to create contextuality images, generating pitch class projections and projections to toroidal space from periodicity pitch and contextuality images. It also integrates functionality from the BTB (Beyond the Beat) algorithm developed by Tomic and Janata for performing rhythm based analyses of musical audio signals and MIDI recordings of tapping responses.
+
+BibTeX entry for the main IPEM-Toolbox Paper:
+
+bc. @inproceedings{135924,
+  author       = {Leman, Marc and Lesaffre, Micheline and Tanghe, Koen},
+  booktitle    = {Conference Program and Abstracts of SMPC 2001 Kingston, August 9-11, 2001},
+  language     = {eng},
+  pages        = {25},
+  title        = {An introduction to the IPEM Toolbox for Perception-Based Music Analysis.},
+  year         = {2001},
+}
+
+h3. Research with the IPEM Toolbox
+
+Here, a list of scholarly works done using the IPEM Toolbox can be found. A more complete "list of research done using the IPEM Toolbox":http://scholar.google.be/scholar?q=%22IPEM+Toolbox%22+&btnG=&hl=en&as_sdt=0%2C5 can be found on Google Scholar. Some key papers include:
+
+* "An Auditory Model of the Role of Short-Term Memory in Probe-Tone Ratings":http://www.jstor.org/stable/40285830, Marc Leman, __Music Perception: An Interdisciplinary Journal__ , Vol. 17, No. 4, Tonality Induction (Summer, 2000), p. 481-509
+* "The Cortical Topography of Tonal Structures Underlying Western Music":http://www.sciencemag.org/content/298/5601/2167.short Petr Janata, Jeffrey L. Birk, John D. Van Horn, Marc Leman, Barbara Tillmann, and Jamshed J. Bharucha. __Science__ 298 (5601):2167-2170 (2002)
+
+
+h2. Installation Instructions
+
+The IPEM Toolbox was originally developed for Matlab 5.3.1 on Windows but has been ported to different Matlab versions and other platforms. The installation instructions assume you have downloaded the latest release of the IPEM-Toolbox.
+
+The IPEM-Toolbox has two dependencies. It needs the "Signal Processing Toolbox":http://www.mathworks.nl/products/signal/ and an Auditory Modeling library, also developed at "UGent":http://ugent.be. The auditory model is a C-library and needs to be compiled to work correctly with your Matlab Version, this is especially true on UNIX systems. On Windows simply copying a @dll@ suffices. 
+
+h3. Installation on Windows
+
+Simply download the latest release and unzip it and start Matlab. Navigate to the @IPEMToolbox@ directory and call call @IPEMSetup@ within Matlab, this should setup your matlab path. Test the install by running the demo @IPEMDemoMECRhythmExtraction@.
+
+
+h3. Installation and Compilation on UNIX (Linux, Mac OS X)
+
+This assumes you already have a compiler and GNU Make installed on your system. On Mac OS X this is done by installing XCode, on Debian by executing @apt-get install build-essential@, on other systems comparable packages need to be installed. 
+
+# Download the latest release and unzip it.
+# Open a terminal window and navigate to the unzipped @AuditoryModel/Matlab_version_UNIX@ directory. Replace the version with the version you want to compile for.
+# Open @Makefile@ and change the @MATLAB_DIR@ path, optionally some other settings need to be changed (the compiler used). For Linux this will usually be in @/usr/local@  (e.g. @/usr/local/matlab-R14SP3@). For OS X, this will usually be in @/Applications@ (e.g. @/Applications/MATLAB74@).
+# Change the MEX_EXT variable to one that is appropriate for your operating system. Possible extensions are suggested in the Makefile.
+# Save the Makefile and type make in your terminal window. This will hopefully compile several object files and a mex  unction in the  @Release@ subdirectory. The mex function is called:  @IPEMProcessAuditoryModelSafe.(mexext)@ where (mexext) is: mexglx (for 32-bit Linux), mexa64 (for 64-bit Linux),  mexmac (for OS X, PowerPC), or mexmaci (for OS X, Intel)
+# If you compiled for Matlab 7 or 8 type @make install@ to copy the compiled files to @IPEMToolbox/Common@ otherwise copy the compiled files manually. 
+# Start your Matlab environment and navigate to the IPEMToolbox directory. Run IPEMSetup.m to setup the toolbox.
+# Test the install by running the demo @IPEMDemoMECRhythmExtraction@
+
+The steps to compile and use the toolbox in GNU Octave are very similar. Make sure the @mkoctfile@ command is available in your path before running make. On Debian this is found in the @octave-pkg-dev@ package.
+
+
+h2. Credits
+
+* The IPEM-Toolbox is developed at "IPEM":http://www.ipem.ugent.be, "University Ghent":http://ugent.be by M. Leman, M. Lesaffre, K. Tanghe.
+* The Auditory Model is developed at "ELIS":http://www.elis.ugent.be/, "University Ghent":http://ugent.be by Luc M. Van Immerseel and J.P. Martens.
+* *Stefan Tomic* (sttomic[at]ucdavis[dot]edu) modified the IPEM Toolbox to run on Linux and MacOSX. Thanks!
+
+
+h2. Releases
+
+The latest release is advised, it runs on Windows, Mac OS X and Linux and instructions are included to get it started in Matlab versions 6.0, 7.0 and 8.0. It also contains instructions for "GNU Otave":https://www.gnu.org/software/octave/ users.
+
+* "*2001.02 - IPEM Toolbox 1.00* - Matlab 5.3 - Windows":http://www.ipem.ugent.be/Toolbox/releases/2001.02.28.IPEMToolbox_1.00_Matlab_5.3_Windows_Installer.zip: Contains an installer package for Matlab 5.3 running  on Windows. The release is accompanied by the "IPEM Toolbox Manual 1.00":http://www.ipem.ugent.be/Toolbox/releases/2001.02.28.IPEMToolbox_1.00_Manual.zip.
+* "*2001.02 - IPEM Toolbox 1.00* - Matlab 6.0 - Windows":http://www.ipem.ugent.be/Toolbox/releases/2001.02.28.IPEMToolbox_1.00_Matlab_6.0_Windows_Installer.zip: Contains an installer package for Matlab 6.0 running on Windows. The release is accompanied by the "IPEM Toolbox Manual 1.00":http://www.ipem.ugent.be/Toolbox/releases/2001.02.28.IPEMToolbox_1.00_Manual.zip.
+* "*2005.01 - IPEM Toolbox 1.01* - Matlab 6.0 - Windows":http://www.ipem.ugent.be/Toolbox/releases/2005.01.21.IPEMToolbox_1.01_Source.zip: Contains the first open source (GPL) release of the IPEM-Toolbox. The Matlab source files and manual are included. The auditory model is included as a @dll@, so it only runs on Windows.
+* "*2005.01 - IPEM Toolbox 1.02* - Matlab 6.0 - Windows":http://www.ipem.ugent.be/Toolbox/releases/2005.01.21.IPEMToolbox_1.02_Source.zip: Contains an open source (GPL) release of the IPEM-Toolbox. The Matlab source files and manual are included. The auditory model is included as a @dll@, so it only runs on Windows. Contains an important bug fix in @IPEMPeriodicityPitch@
+* "*2009.02.17 - IPEM Toolbox 1.02* - Matlab 6.0 and Matlab 7.0 - UNIX":http://www.ipem.ugent.be/Toolbox/releases/2009.02.17.IPEMToolbox_1.02_Matlab_6.0_and_7.0_UNIX.zip: A release of the IPEM-Toolbox together with the source files of the auditory model and make files. This release enables users to run the toolbox on Mac OS X and Linux. The make files are contributed by Stefan Tomic
+* "*2014.01.14 - IPEM Toolbox 1.02* - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX":http://www.ipem.ugent.be/Toolbox/releases/2014.01.14.IPEMToolbox_1.02_Matlab_Octave_UNIX_Windows.zip. A release that contains source files and make files to use the IPEMToolbox on several platforms. The "latest manual":http://www.ipem.ugent.be/Toolbox/releases/2014.01.14.IPEMToolboxManual.pdf, LaTeX source files and the source for the Auditory Model are all part of the release.
+** @AuditoryModel@
+*** @Matlab6_UNIX@: Makefile to compile the auditory model for Matlab 6 on Linux and Mac OS X.
+*** @Matlab6_7_Windows@: A dll to copy for Matlab 6 and 7 on Windows.
+*** @Matlab7_UNIX@: Makefile to compile the auditory model for Matlab 7 on Linux and Mac OS X.
+*** @Matlab8_UNIX@: Makefile to compile the auditory model for Matlab 8 on Linux and Mac OS X.
+*** @Octave_UNIX@: Makefile to compile the auditory model for GNU Octave on Linux and Mac OS X.
+*** @src@: The c source files of the auditory model.
+** @Docs@: Contains the manual as @pdf@-file and this readme.
+** @IPEMToolbox@: Contains the Matlab source code.
+** @Manual@: Contains the LaTeX source files to compile the manual.
+
+
+
+h3. Contact and Support
+
+The IPEM Toolbox project ended in 2003. We do not officially provide any support at all, however we might do an effort to answer your questions if you ask politely and we find some time ;-)
+
+h3. License
+
+Both the IPEM Toolbox Matlab code and the auditory model c-code are released under the GPL.
