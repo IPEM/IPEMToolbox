@@ -85,6 +85,7 @@ h2. Credits
 * The IPEM-Toolbox is developed at "IPEM":http://www.ipem.ugent.be, "University Ghent":http://ugent.be by M. Leman, M. Lesaffre, K. Tanghe.
 * The Auditory Model is developed at "ELIS":http://www.elis.ugent.be/, "University Ghent":http://ugent.be by Luc M. Van Immerseel and J.P. Martens.
 * *Stefan Tomic* (sttomic[at]ucdavis[dot]edu) modified the IPEM Toolbox to run on Linux and MacOSX. Thanks!
+* *Jane Lee* (jlee7[at]]stonehill[dot]edu) compiled the auditory model for windows 64 bit and Matlab 8 and provided documentation.
 
 
 h2. Releases
@@ -107,7 +108,7 @@ The latest release is advised, it runs on Windows, Mac OS X and Linux and instru
 ** @Docs@: Contains the manual as @pdf@-file and this readme.
 ** @IPEMToolbox@: Contains the Matlab source code.
 ** @Manual@: Contains the LaTeX source files to compile the manual.
-
+* *2016.03.31 - IPEM Toolbox 1.03* - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX. Published on github and indluded information on using the toolbox on 64bit windows and matlab 8 thanks to Jane Lee.
 
 
 h3. Contact and Support
