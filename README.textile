@@ -24,7 +24,7 @@ The IPEM Toolbox is useful to researchers interested in music content analysis a
 
 h2. Download
 
-Download the latest release here: "*2014.01.14 - IPEM Toolbox 1.02* - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX":http://www.ipem.ugent.be/Toolbox/releases/2014.01.14.IPEMToolbox_1.02_Matlab_Octave_UNIX_Windows.zip.
+Download the latest release  at GitHub: "*IPEM Toolbox 1.03*":https://github.com/IPEM/IPEMToolbox/zipball/master.
 
 h2. Further Reading
 
@@ -57,11 +57,11 @@ h2. Installation Instructions
 
 The IPEM Toolbox was originally developed for Matlab 5.3.1 on Windows but has been ported to different Matlab versions and other platforms. The installation instructions assume you have downloaded the latest release of the IPEM-Toolbox.
 
-The IPEM-Toolbox has two dependencies. It needs the "Signal Processing Toolbox":http://www.mathworks.nl/products/signal/ and an Auditory Modeling library, also developed at "UGent":http://ugent.be. The auditory model is a C-library and needs to be compiled to work correctly with your Matlab Version, this is especially true on UNIX systems. On Windows simply copying a @dll@ suffices. 
+The IPEM-Toolbox has two dependencies. It needs the "Signal Processing Toolbox":http://www.mathworks.nl/products/signal/ and an Auditory Modeling library, also developed at "UGent":http://ugent.be. The auditory model is a C-library and needs to be compiled to work correctly with your Matlab Version, this is especially true on UNIX systems. On Windows simply copying a @dll@ suffices (DLL's for 32 and 64 bit systems are available). 
 
 h3. Installation on Windows
 
-Simply download the latest release and unzip it and start Matlab. Navigate to the @IPEMToolbox@ directory and call call @IPEMSetup@ within Matlab, this should setup your matlab path. Test the install by running the demo @IPEMDemoMECRhythmExtraction@.
+Download the latest release and unzip it and start Matlab. Navigate to the @IPEMToolbox@ directory and call call @IPEMSetup@ within Matlab, this should setup your matlab path. Test the install by running the demo @IPEMDemoMECRhythmExtraction@.
 
 
 h3. Installation and Compilation on UNIX (Linux, Mac OS X)
@@ -113,7 +113,7 @@ The latest release is advised, it runs on Windows, Mac OS X and Linux and instru
 
 h3. Contact and Support
 
-The IPEM Toolbox project ended in 2003. We do not officially provide any support at all, however we might do an effort to answer your questions if you ask politely and we find some time ;-)
+The IPEM Toolbox project ended in 2003! We do not officially provide any support at all, however we might do an effort to answer your questions if you ask politely and we find some time ;-)
 
 h3. License
 
