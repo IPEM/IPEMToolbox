@@ -28,7 +28,7 @@ Download the latest release  at GitHub: "*IPEM Toolbox 1.03*":https://github.com
 
 h2. Further Reading
 
-* "The IPEM Toolbox website":http://www.ipem.ugent.be/Toolbox
+* "The IPEM Toolbox website":http://www.ugent.be/lw/kunstwetenschappen/en/research-groups/musicology/ipem/finishedprojects/ipem-toolbox.htm
 * "Introduction to the IPEM Toolbox for Perception-based Music Analysis":http://www.ipem.ugent.be/Toolbox/IT_PaperMeeting.pdf, M. Leman, M. Lesaffre, K. Tanghe, in: Proceedings of the XIII Meeting of the FWO Research Society on Foundations of Music Research, Ghent, Belgium, March 2, 2001
 * "PowerPoint presentation and examples":http://www.ipem.ugent.be/Toolbox/IPEMtoolboxNL.zip, 2001 (in Dutch)
 * Pitch and Voiced/Unvoiced Determination with an Auditory Model, Luc M. Van Immerseel, J.P. Martens, 1992. A description of the auditory model used, in a modified form, by the IPEM Toolbox.
@@ -51,6 +51,11 @@ Here, a list of scholarly works done using the IPEM Toolbox can be found. A more
 
 * "An Auditory Model of the Role of Short-Term Memory in Probe-Tone Ratings":http://www.jstor.org/stable/40285830, Marc Leman, __Music Perception: An Interdisciplinary Journal__ , Vol. 17, No. 4, Tonality Induction (Summer, 2000), p. 481-509
 * "The Cortical Topography of Tonal Structures Underlying Western Music":http://www.sciencemag.org/content/298/5601/2167.short Petr Janata, Jeffrey L. Birk, John D. Van Horn, Marc Leman, Barbara Tillmann, and Jamshed J. Bharucha. __Science__ 298 (5601):2167-2170 (2002)
+
+* "Empirical evidence for musical syntax processing? computer simulations reveal the contribution of auditory short-term memory":https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4047967/ Bigand, E., Delbé, C., Poulin-Charronnat, B., Leman, M., and Tillmann, B. (2014). __Frontiers in Systems Neuroscience__, 8(94):1–27.
+
+* " A combined model of sensory and cognitive representations underlying tonal expectations in music: From audio signals to behavior.":https://www.ncbi.nlm.nih.gov/pubmed/24490788  Collins, T., Tillmann, B., Barrett, F. S., Delbé, C., and Janata, P. (2014). __Psychological review__, 121(1):33.
+
 
 
 h2. Installation Instructions
