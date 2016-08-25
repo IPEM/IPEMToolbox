@@ -22,9 +22,12 @@ The PDF manual that comes with the IPEM Toolbox documents both the concepts of t
 
 The IPEM Toolbox is useful to researchers interested in music content analysis and automatic extraction and description of musical features. As already mentioned above, it is our aim to provide functions that allow researchers to deal with different aspects of feature extraction in the field of perception (i.e. of chord and tonality, pitch, sensory dissonance, onset detection, beat and meter extraction, timbre characteristics).
 
+If you use the IPEM Toolbox in your research please cite *__An introduction to the IPEM Toolbox for Perception-Based Music Analysis__ M. Leman, M. Lesaffre and K. Tanghe - Conference Program and Abstracts of SMPC 2001 Kingston*
+
+
 h2. Download
 
-Download the latest release  at GitHub: "*IPEM Toolbox 1.03*":https://github.com/IPEM/IPEMToolbox/zipball/master.
+Download the latest release  at GitHub: "*IPEM Toolbox 1.03*":https://github.com/IPEM/IPEMToolbox/zipball/master. For older releases see below.
 
 h2. Further Reading
 
@@ -34,26 +37,15 @@ h2. Further Reading
 * Pitch and Voiced/Unvoiced Determination with an Auditory Model, Luc M. Van Immerseel, J.P. Martens, 1992. A description of the auditory model used, in a modified form, by the IPEM Toolbox.
 * "Janata Lab Music Toolbox (JLMT)":http://atonal.ucdavis.edu/resources/software/jlmt/ The JLMT consists of a series of MATLAB functions for performing analyses of musical audio signals. The package is an adjunct to an extant Matlab toolbox, the IPEM Toolbox, developed for perception-based music analysis. The JLMT makes significant contributions to the IPEM Toolbox by adding a flexible job manager, expanding the parameter space used to create contextuality images, generating pitch class projections and projections to toroidal space from periodicity pitch and contextuality images. It also integrates functionality from the BTB (Beyond the Beat) algorithm developed by Tomic and Janata for performing rhythm based analyses of musical audio signals and MIDI recordings of tapping responses.
 
-BibTeX entry for the main IPEM-Toolbox Paper:
-
-bc. @inproceedings{135924,
-  author       = {Leman, Marc and Lesaffre, Micheline and Tanghe, Koen},
-  booktitle    = {Conference Program and Abstracts of SMPC 2001 Kingston, August 9-11, 2001},
-  language     = {eng},
-  pages        = {25},
-  title        = {An introduction to the IPEM Toolbox for Perception-Based Music Analysis.},
-  year         = {2001},
-}
 
 h3. Research with the IPEM Toolbox
 
-Here, a list of scholarly works done using the IPEM Toolbox can be found. A more complete "list of research done using the IPEM Toolbox":http://scholar.google.be/scholar?q=%22IPEM+Toolbox%22+&btnG=&hl=en&as_sdt=0%2C5 can be found on Google Scholar. Some key papers include:
+Here, a list of key scholarly works done using the IPEM Toolbox can be found. A more complete "list of research done using the IPEM Toolbox":http://scholar.google.be/scholar?q=%22IPEM+Toolbox%22+&btnG=&hl=en&as_sdt=0%2C5 can be found on Google Scholar. Some key papers include:
 
-* "An Auditory Model of the Role of Short-Term Memory in Probe-Tone Ratings":http://www.jstor.org/stable/40285830, Marc Leman, __Music Perception: An Interdisciplinary Journal__ , Vol. 17, No. 4, Tonality Induction (Summer, 2000), p. 481-509
+* "An Auditory Model of the Role of Short-Term Memory in Probe-Tone Ratings":http://www.jstor.org/stable/40285830, Marc Leman, __Music Perception__ , Vol. 17, No. 4, Tonality Induction (Summer, 2000), p. 481-509
 * "The Cortical Topography of Tonal Structures Underlying Western Music":http://www.sciencemag.org/content/298/5601/2167.short Petr Janata, Jeffrey L. Birk, John D. Van Horn, Marc Leman, Barbara Tillmann, and Jamshed J. Bharucha. __Science__ 298 (5601):2167-2170 (2002)
 * "Empirical evidence for musical syntax processing? computer simulations reveal the contribution of auditory short-term memory":https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4047967/ Bigand, E., Delbé, C., Poulin-Charronnat, B., Leman, M., and Tillmann, B. (2014). __Frontiers in Systems Neuroscience__, 8(94):1–27.
 * " A combined model of sensory and cognitive representations underlying tonal expectations in music: From audio signals to behavior.":https://www.ncbi.nlm.nih.gov/pubmed/24490788  Collins, T., Tillmann, B., Barrett, F. S., Delbé, C., and Janata, P. (2014). __Psychological review__, 121(1):33.
-
 
 
 h2. Installation Instructions
@@ -111,7 +103,7 @@ The latest release is advised, it runs on Windows, Mac OS X and Linux and instru
 ** @Docs@: Contains the manual as @pdf@-file and this readme.
 ** @IPEMToolbox@: Contains the Matlab source code.
 ** @Manual@: Contains the LaTeX source files to compile the manual.
-* *2016.03.31 - IPEM Toolbox 1.03* - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX. Published on github and indluded information on using the toolbox on 64bit windows and matlab 8 thanks to Jane Lee.
+* "*2016.03.31 - IPEM Toolbox 1.03*":https://github.com/IPEM/IPEMToolbox/zipball/master - Matlab 6.0, 7.0, 8.0, and Octave -  Windows and UNIX. Published on Gitub and indluded information on using the toolbox on 64bit windows and matlab 8 thanks to Jane Lee.
 
 
 h3. Contact and Support
